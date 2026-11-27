@@ -1,0 +1,2062 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Georgetown National Security Tech Job Tracker</title>
+<style>
+  /* Georgetown Blue #041E42 · Georgetown Gray #63666A */
+  :root {
+    color-scheme: light;
+    --gu-blue: #041E42;
+    --gu-gray: #63666A;
+    --hero-bg: #041E42;
+    --hero-ink: #ffffff;
+    --hero-sub: #B9C3D3;
+    --surface-0: #F2F3F5;
+    --surface-1: #FFFFFF;
+    --surface-2: #F7F8FA;
+    --border: #DCDFE4;
+    --grid: #ECEEF1;
+    --text-primary: #0A1628;
+    --text-secondary: #63666A;
+    --text-muted: #8B8E93;
+    --accent: #041E42;          /* selected chips, bars, focus */
+    --accent-ink: #ffffff;
+    --link: #1D4A8A;            /* hover links on light surface */
+    --accent-soft: #E7ECF3;
+    --accent-line: #9AAAC2;
+    --new: #17784A;
+    --new-soft: #E1F2E8;
+    --intern: #8A6100;
+    --intern-soft: #F8EFD8;
+    --closed: #8B8E93;
+    --warn: #A65A00;
+    --warn-soft: #FBF0E1;
+    --shadow: 0 1px 2px rgba(4,30,66,.06), 0 4px 16px rgba(4,30,66,.06);
+    --shadow-lg: 0 10px 34px rgba(4,30,66,.16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --hero-bg: #041E42;
+      --hero-sub: #A9B6CA;
+      --surface-0: #060E1A;
+      --surface-1: #0C1828;
+      --surface-2: #101E31;
+      --border: #1F2E44;
+      --grid: #172539;
+      --text-primary: #E9EDF3;
+      --text-secondary: #A9ACB1;
+      --text-muted: #7F8590;
+      --accent: #5F8BC9;
+      --accent-ink: #06101E;
+      --link: #8FB3E6;
+      --accent-soft: #142A47;
+      --accent-line: #3A5A86;
+      --new: #5CCB8E;
+      --new-soft: #12301F;
+      --intern: #E0B652;
+      --intern-soft: #33270B;
+      --closed: #7F8590;
+      --warn: #E59A45;
+      --warn-soft: #36270F;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.25);
+      --shadow-lg: 0 10px 34px rgba(0,0,0,.5);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--surface-0); color: var(--text-primary);
+    font: 14px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background:
+      radial-gradient(1200px 380px at 85% -40%, rgba(255,255,255,.10), transparent 60%),
+      repeating-linear-gradient(135deg, rgba(255,255,255,.025) 0 2px, transparent 2px 14px),
+      var(--hero-bg);
+    color: var(--hero-ink);
+    padding: 34px 0 86px;
+    border-bottom: 3px solid var(--gu-gray);
+  }
+  .hero-inner, .wrap { max-width: 1320px; margin: 0 auto; padding: 0 28px; }
+  .hero-inner { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; }
+  .eyebrow { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--hero-sub); display: flex; align-items: center; gap: 10px; }
+  .eyebrow::before { content: ''; width: 26px; height: 2px; background: #9EA2A6; }
+  h1 { font-family: Georgia, "Iowan Old Style", "Times New Roman", serif; font-weight: 400; font-size: 34px; line-height: 1.15; margin: 10px 0 8px; letter-spacing: -.01em; }
+  .sub { color: var(--hero-sub); max-width: 620px; margin: 0; font-size: 14.5px; }
+  .updated { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: #DCE3EE; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); border-radius: 999px; padding: 6px 13px; white-space: nowrap; }
+  .updated .dot { width: 7px; height: 7px; border-radius: 50%; background: #5CCB8E; box-shadow: 0 0 0 3px rgba(92,203,142,.22); }
+
+  .wrap { margin-top: -58px; padding-bottom: 56px; position: relative; }
+
+  /* ---------- stat tiles ---------- */
+  .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
+  .tile {
+    position: relative; overflow: hidden; background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 18px 15px; cursor: pointer; text-align: left; font: inherit; color: inherit; box-shadow: var(--shadow);
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .tile::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: transparent; transition: background .15s; }
+  .tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .tile.on { border-color: var(--accent-line); }
+  .tile.on::before { background: var(--accent); }
+  .tile .k { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .08em; display: flex; align-items: center; gap: 7px; }
+  .tile .k i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+  .tile .v { font-family: Georgia, "Iowan Old Style", serif; font-size: 36px; line-height: 1.1; margin: 6px 0 2px; font-variant-numeric: lining-nums tabular-nums; color: var(--text-primary); }
+  .tile .h { font-size: 12.5px; color: var(--text-muted); }
+  .k .i-open { background: var(--accent); } .k .i-new { background: var(--new); }
+  .k .i-intern { background: var(--intern); } .k .i-closed { background: var(--closed); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 22px; align-items: start; }
+  .panel { background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+  .main-panel { overflow: visible; }
+
+  /* ---------- filters ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 14px 12px; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 999px; padding: 6px 13px;
+    cursor: pointer; user-select: none; color: var(--text-secondary); background: var(--surface-1); font-size: 13px; transition: all .15s;
+  }
+  .chip:hover { border-color: var(--accent-line); color: var(--text-primary); }
+  .chip input { margin: 0; accent-color: var(--accent); }
+  .chip:has(input:checked) { color: var(--accent-ink); border-color: var(--accent); background: var(--accent); }
+  /* dropdown chips (New / Type): same pill, filled in when something other than the default is picked */
+  .chip.sel { padding: 4px 8px 4px 13px; gap: 4px; }
+  .chip.sel .sel-k { color: var(--text-muted); }
+  .chip.sel select { font: inherit; color: var(--text-primary); background: transparent; border: 0; padding: 2px 0; cursor: pointer; }
+  .chip.sel select:focus { outline: none; }
+  .chip.sel:focus-within { border-color: var(--accent-line); }
+  .chip.sel option { color: var(--text-primary); background: var(--surface-1); }
+  .chip.sel.on { border-color: var(--accent); background: var(--accent); }
+  .chip.sel.on .sel-k, .chip.sel.on select { color: var(--accent-ink); }
+  .chip.sel.on .sel-k { opacity: .8; }
+  .count { margin-left: auto; color: var(--text-secondary); font-size: 13px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .count b { color: var(--text-primary); font-weight: 600; }
+
+  .cats { display: flex; flex-wrap: wrap; gap: 7px; padding: 12px 14px 14px; border-top: 1px solid var(--grid); border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .cats-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); width: 100%; margin-bottom: 1px; }
+  .cat {
+    font: inherit; font-size: 12.5px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+    border-radius: 999px; padding: 4px 11px; cursor: pointer; transition: all .15s;
+  }
+  .cat:hover { border-color: var(--accent-line); }
+  .cat .n { color: var(--text-muted); margin-left: 5px; font-variant-numeric: tabular-nums; }
+  .cat.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .cat.on .n { color: inherit; opacity: .75; }
+  .cat .x { display: none; margin-left: 6px; opacity: .8; }
+  .cat.on .x { display: inline; }
+  .cat.zero:not(.on) { opacity: .5; }
+
+  .dd { position: relative; }
+  .dd > summary {
+    list-style: none; cursor: pointer; user-select: none; white-space: nowrap; font-size: 13px;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 9px; padding: 8px 32px 8px 12px; color: var(--text-primary); transition: all .15s;
+  }
+  .dd > summary:hover { border-color: var(--accent-line); }
+  .dd > summary::-webkit-details-marker { display: none; }
+  .dd > summary::after { content: ''; position: absolute; right: 13px; top: 50%; width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-70%) rotate(45deg); opacity: .6; }
+  .dd.active > summary { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+  .dd-menu {
+    position: absolute; z-index: 20; top: calc(100% + 6px); left: 0; width: 280px; max-height: 440px; overflow: auto;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lg); padding: 6px 0;
+  }
+  .dd-actions { display: flex; gap: 6px; padding: 6px 12px 10px; border-bottom: 1px solid var(--grid); margin-bottom: 4px; }
+  .dd-actions button { font: inherit; font-size: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-secondary); border-radius: 7px; padding: 4px 10px; cursor: pointer; }
+  .dd-actions button:hover { color: var(--text-primary); border-color: var(--accent-line); }
+  .dd-item { display: grid; grid-template-columns: 18px 24px 1fr auto; align-items: center; gap: 4px; padding: 5px 14px; cursor: pointer; font-size: 13px; }
+  .dd-item:hover { background: var(--accent-soft); }
+  .dd-item input { margin: 0; accent-color: var(--accent); }
+  .dd-item .rk { color: var(--text-muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .dd-item .n { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+  .clear-all { font: inherit; font-size: 12.5px; background: none; border: none; color: var(--link); cursor: pointer; padding: 4px 6px; text-decoration: underline; text-underline-offset: 3px; }
+  .clear-all[hidden] { display: none; }
+
+  /* ---------- table ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th {
+    font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .09em; cursor: pointer;
+    white-space: nowrap; position: sticky; top: 0; background: var(--surface-1); z-index: 1; padding-top: 11px; padding-bottom: 11px; border-bottom: 1px solid var(--border);
+  }
+  th:hover { color: var(--text-primary); }
+  th .arrow { color: var(--accent); }
+  tbody tr { transition: background .1s; }
+  tbody tr:hover { background: var(--surface-2); }
+  tbody tr:hover td.title { box-shadow: inset 3px 0 0 var(--accent); }
+  td.title a { color: var(--text-primary); font-weight: 600; text-decoration: none; }
+  td.title a:hover { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+  td .meta { color: var(--text-muted); font-size: 12.5px; margin-top: 3px; }
+  td.date { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+  td.loc { color: var(--text-secondary); }
+  td.co { white-space: nowrap; font-weight: 500; }
+  .co-link { color: inherit; text-decoration: none; }
+  .co-link:hover, .co-link:focus-visible { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+  .co-link .ext { font-size: 11px; margin-left: 3px; opacity: 0; transition: opacity .12s; }
+  .co-link:hover .ext, .co-link:focus-visible .ext { opacity: .8; }
+  .co-in { display: inline-flex; align-items: center; gap: 9px; margin-top: -2px; }
+  .av {
+    display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 6px;
+    background: var(--accent-soft); color: var(--accent); font-size: 10.5px; font-weight: 700; letter-spacing: .02em; border: 1px solid var(--accent-line);
+  }
+  @media (prefers-color-scheme: dark) { .av { color: var(--link); } }
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 5px; padding: 2px 7px; margin-left: 7px; vertical-align: 1px; letter-spacing: .06em; }
+  .b-new { color: var(--new); background: var(--new-soft); }
+  .b-intern { color: var(--intern); background: var(--intern-soft); }
+  .b-closed { color: var(--closed); border: 1px solid var(--border); }
+  tr.closed td.title a { color: var(--closed); text-decoration: line-through; }
+  td.fitc { white-space: nowrap; }
+  .fitpill {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    padding: 3px 9px; border-radius: 999px; white-space: nowrap; cursor: help; border: 1px solid transparent;
+  }
+  .fitpill .sc { font-weight: 600; opacity: .7; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+  .fit-strong { background: var(--accent); color: var(--accent-ink); }
+  .fit-possible { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+  .fit-low { color: var(--text-muted); border-color: var(--border); }
+  @media (prefers-color-scheme: dark) { .fit-possible { color: var(--link); } }
+  .fitcell { display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+  .votes { display: inline-flex; gap: 4px; }
+  .vote {
+    display: inline-grid; place-items: center; width: 28px; height: 26px; padding: 0; border-radius: 7px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-muted); transition: all .12s;
+  }
+  .vote:hover { color: var(--text-primary); border-color: var(--accent-line); }
+  .vote.up.on { background: var(--new-soft); color: var(--new); border-color: var(--new); }
+  .vote.down.on { background: var(--warn-soft); color: var(--warn); border-color: var(--warn); }
+  .vote svg { width: 14px; height: 14px; }
+  tr.voted-down td { opacity: .55; }
+  .fb { padding: 12px 16px 14px; border-bottom: 1px solid var(--border); }
+  .fb-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .fb-counts { display: flex; gap: 12px; font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .fb-counts b { color: var(--text-primary); }
+  .fb-actions { display: flex; gap: 6px; margin-top: 10px; }
+  .fb-actions button { font: inherit; font-size: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-primary); border-radius: 7px; padding: 5px 10px; cursor: pointer; }
+  .fb-actions button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .fb-actions button:disabled { opacity: .45; cursor: default; }
+  .fb p { margin: 8px 0 0; font-size: 12px; color: var(--text-muted); }
+  /* ---------- Find alumni (LinkedIn) ---------- */
+  .alum-btn {
+    display: inline-flex; align-items: center; gap: 5px; margin-top: 6px; font: inherit; font-size: 12px; font-weight: 600;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); border-radius: 7px; padding: 3px 9px; cursor: pointer;
+  }
+  .alum-btn:hover, .alum-btn[aria-expanded="true"] { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+  @media (prefers-color-scheme: dark) { .alum-btn:hover, .alum-btn[aria-expanded="true"] { color: var(--link); } }
+  .alum-btn svg { width: 13px; height: 13px; }
+  .alum-menu {
+    position: fixed; z-index: 35; width: 330px; max-width: calc(100vw - 24px); background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: var(--shadow-lg); padding: 6px 0 8px;
+  }
+  .alum-menu[hidden] { display: none; }
+  .alum-menu .hd { padding: 8px 14px 6px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  .alum-menu a {
+    display: flex; gap: 10px; align-items: flex-start; padding: 7px 14px; color: var(--text-primary); text-decoration: none; font-size: 13px; line-height: 1.35;
+  }
+  .alum-menu a:hover, .alum-menu a:focus { background: var(--accent-soft); outline: none; }
+  .alum-menu a .ico { flex: none; width: 18px; height: 18px; border-radius: 4px; background: #0A66C2; color: #fff; font-size: 10px; font-weight: 800; display: grid; place-items: center; margin-top: 1px; }
+  .alum-menu a small { display: block; color: var(--text-muted); font-size: 11.5px; }
+  .alum-menu .ft { padding: 8px 14px 0; margin-top: 4px; border-top: 1px solid var(--grid); font-size: 11.5px; color: var(--text-muted); }
+  .alum-menu .ft button { font: inherit; font-size: 11.5px; border: none; background: none; color: var(--link); cursor: pointer; padding: 0; text-decoration: underline; }
+  .schools { padding: 12px 16px 14px; border-bottom: 1px solid var(--border); }
+  .school-list { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .school-list li { display: flex; align-items: center; gap: 8px; font-size: 13px; background: var(--surface-2); border: 1px solid var(--grid); border-radius: 8px; padding: 6px 8px 6px 10px; }
+  .school-list li span.nm { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .school-list li .pill { font-size: 10.5px; font-weight: 700; color: var(--new); background: var(--new-soft); border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+  .school-list li button { border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 13px; padding: 0 2px; }
+  .school-list li button:hover { color: var(--warn); }
+  .school-add { display: flex; flex-direction: column; gap: 6px; }
+  .school-add input { font: inherit; font-size: 12.5px; color: var(--text-primary); background: var(--surface-2); border: 1px solid var(--border); border-radius: 7px; padding: 6px 9px; min-width: 0; }
+  .school-add input:focus { outline: none; border-color: var(--accent-line); background: var(--surface-1); }
+  .school-add button { align-self: flex-start; font: inherit; font-size: 12px; font-weight: 600; border: none; border-radius: 7px; padding: 5px 12px; cursor: pointer; background: var(--accent); color: var(--accent-ink); }
+  .schools p { margin: 8px 0 0; font-size: 11.5px; color: var(--text-muted); }
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none;
+    background: var(--gu-blue); color: #fff; padding: 10px 14px; border-radius: 10px; box-shadow: var(--shadow-lg); font-size: 13px;
+    display: flex; gap: 14px; align-items: center; transition: all .18s ease; z-index: 40;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%); pointer-events: auto; }
+  .toast button { font: inherit; font-size: 13px; font-weight: 600; background: none; border: none; color: #9FC2F0; cursor: pointer; padding: 0; }
+  /* ---------- plain-English "Ask" ---------- */
+  .askbar { padding: 16px 14px 4px; }
+  .ask-form { display: flex; gap: 8px; align-items: stretch; }
+  .ask-field { position: relative; flex: 1 1 auto; min-width: 0; }
+  .ask-field svg { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--accent); pointer-events: none; }
+  @media (prefers-color-scheme: dark) { .ask-field svg { color: var(--link); } }
+  .ask-field input {
+    width: 100%; font: inherit; font-size: 14.5px; color: var(--text-primary); background: var(--surface-1);
+    border: 1.5px solid var(--accent-line); border-radius: 11px; padding: 11px 14px 11px 40px; transition: border-color .15s, box-shadow .15s;
+  }
+  .ask-field input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .ask-go { font: inherit; font-size: 14px; font-weight: 600; border: none; border-radius: 11px; padding: 0 18px; cursor: pointer; background: var(--accent); color: var(--accent-ink); white-space: nowrap; }
+  .ask-go:hover { filter: brightness(1.15); }
+  .ask-examples { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12px; color: var(--text-muted); }
+  .ask-examples button { font: inherit; font-size: 12px; border: 1px dashed var(--border); background: transparent; color: var(--text-secondary); border-radius: 999px; padding: 3px 10px; cursor: pointer; }
+  .ask-examples button:hover { border-style: solid; border-color: var(--accent-line); color: var(--text-primary); }
+  .ask-result { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; color: var(--text-secondary); background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 10px; padding: 8px 12px; }
+  .ask-result[hidden] { display: none; }
+  .ask-result .tag { background: var(--surface-1); border: 1px solid var(--accent-line); color: var(--text-primary); border-radius: 999px; padding: 2px 9px; font-size: 12.5px; }
+  .ask-result .tag b { font-weight: 600; color: var(--text-secondary); margin-right: 4px; }
+  .ask-result .note { width: 100%; font-size: 12px; color: var(--text-muted); }
+  .ask-result button { font: inherit; font-size: 12.5px; border: none; background: none; color: var(--link); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; margin-left: auto; padding: 0; }
+
+  /* ---------- near a location ---------- */
+  .nearbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 0 14px 12px; }
+  .nearbar[hidden] { display: none; }
+  .nearbar .lbl { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  .near-input { position: relative; flex: 0 1 300px; min-width: 200px; }
+  .near-input svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+  .near-input input {
+    width: 100%; font: inherit; font-size: 13px; color: var(--text-primary); background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 9px; padding: 7px 30px 7px 32px;
+  }
+  .near-input input:focus { outline: none; border-color: var(--accent-line); background: var(--surface-1); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .near-input.set input { border-color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+  .near-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 2px 6px; }
+  .near-clear[hidden] { display: none; }
+  .near-sugg {
+    position: absolute; z-index: 25; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; box-shadow: var(--shadow-lg); padding: 4px 0; max-height: 300px; overflow: auto;
+  }
+  .near-sugg[hidden] { display: none; }
+  .near-sugg button { display: flex; justify-content: space-between; width: 100%; border: none; background: none; font: inherit; font-size: 13px; text-align: left; padding: 7px 12px; cursor: pointer; color: var(--text-primary); }
+  .near-sugg button:hover, .near-sugg button.hl { background: var(--accent-soft); }
+  .near-sugg button span { color: var(--text-muted); }
+  .seg.radius button { padding: 5px 11px; font-size: 12.5px; }
+  .seg.radius.off { opacity: .5; }
+  .nearhint { font-size: 12px; color: var(--text-muted); }
+  .dist { display: inline-block; margin-top: 4px; font-size: 11.5px; font-weight: 600; color: var(--accent); background: var(--accent-soft); border-radius: 5px; padding: 1px 7px; font-variant-numeric: tabular-nums; }
+  @media (prefers-color-scheme: dark) { .dist { color: var(--link); } }
+  .fitlabel { font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin-right: 8px; }
+  .fitwrap { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 0; }
+  .empty { padding: 56px 20px; text-align: center; color: var(--text-muted); }
+
+  /* ---------- side panel ---------- */
+  .side { position: sticky; top: 16px; overflow: hidden; }
+  .side h2 {
+    font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--hero-ink); margin: 0;
+    padding: 14px 16px; background: var(--hero-bg); display: flex; justify-content: space-between; gap: 8px;
+  }
+  .side h2 span { text-transform: none; letter-spacing: 0; color: var(--hero-sub); font-weight: 400; }
+  .bars { padding: 8px 0; max-height: calc(100vh - 420px); min-height: 220px; overflow: auto; }
+  .bar-row { display: grid; grid-template-columns: 122px 1fr 34px; gap: 10px; align-items: center; padding: 5px 16px; cursor: pointer; font-size: 13px; }
+  .bar-row:hover { background: var(--surface-2); }
+  .bar-row.on { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+  .bar-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-primary); }
+  .bar-row .nm .rk { color: var(--text-muted); font-variant-numeric: tabular-nums; display: inline-block; width: 22px; font-size: 12px; }
+  .bar-row .track { height: 8px; background: var(--grid); border-radius: 4px; }
+  .bar-row .fill { height: 8px; background: var(--accent); border-radius: 4px; min-width: 3px; transition: width .25s ease; }
+  .bar-row .num { text-align: right; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+  .bar-row.err .nm, .bar-row.partial .nm { color: var(--warn); }
+  .bar-group, .dd-group {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted);
+  }
+  .bar-group { padding: 12px 16px 6px; }
+  .bar-group:first-child { padding-top: 6px; }
+  .dd-group { padding: 10px 14px 4px; }
+  .dd-group button { font: inherit; font-size: 11px; letter-spacing: 0; text-transform: none; font-weight: 500; background: none; border: none; color: var(--link); cursor: pointer; padding: 0; }
+
+  /* group switch */
+  .groupbar > * { min-width: 0; max-width: 100%; }
+  .seg { display: inline-flex; flex-wrap: wrap; padding: 3px; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; }
+  .seg button {
+    font: inherit; font-size: 13px; border: none; background: transparent; color: var(--text-secondary); padding: 6px 12px; border-radius: 7px; cursor: pointer; white-space: nowrap;
+    transition: background .15s, color .15s;
+  }
+  .seg button:hover { color: var(--text-primary); }
+  .seg button.on { background: var(--accent); color: var(--accent-ink); box-shadow: 0 1px 2px rgba(4,30,66,.25); }
+  .seg button .n { opacity: .65; margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .groupbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 14px 0; }
+  .groupbar .hint { font-size: 12.5px; color: var(--text-muted); }
+  .bar-row.zero .fill { background: transparent; }
+  .tip { position: fixed; pointer-events: none; background: var(--gu-blue); color: #fff; font-size: 12px; padding: 7px 10px; border-radius: 7px; z-index: 30; display: none; max-width: 260px; box-shadow: var(--shadow-lg); }
+  .note { padding: 12px 16px 16px; color: var(--text-muted); font-size: 12px; border-top: 1px solid var(--border); background: var(--surface-2); }
+  .note p { margin: 0 0 8px; } .note p:last-child { margin: 0; }
+
+  .banner { background: var(--warn-soft); color: var(--warn); border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; }
+  footer { margin-top: 26px; color: var(--text-muted); font-size: 12px; text-align: center; }
+  footer .sep { margin: 0 8px; color: var(--border); }
+
+  /* ---------- resume matcher ---------- */
+  .rs-open { font: inherit; font-size: 13.5px; font-weight: 600; border: 1.5px solid var(--accent-line); border-radius: 11px; padding: 0 14px; cursor: pointer; background: var(--surface-1); color: var(--accent); white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
+  .rs-open:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .rs-open.on { background: var(--accent-soft); border-color: var(--accent); }
+  .rs-open svg { width: 16px; height: 16px; }
+  @media (prefers-color-scheme: dark) { .rs-open { color: var(--link); } }
+  .rs-bar { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; font-size: 13px; color: var(--text-secondary); border: 1px solid var(--accent-line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 8px 12px; background: var(--surface-2); }
+  .rs-bar[hidden] { display: none; }
+  .rs-bar b { color: var(--text-primary); }
+  .rs-bar .sp { flex: 1; }
+  .rs-bar button, .lnk { font: inherit; font-size: 12.5px; border: none; background: none; color: var(--link); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 0; }
+  .rs-bar button.on { font-weight: 700; text-decoration: none; color: var(--accent); }
+  @media (prefers-color-scheme: dark) { .rs-bar button.on { color: var(--link); } }
+  .row-acts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .match-pill { font: inherit; font-size: 11px; font-weight: 700; border-radius: 999px; padding: 2px 9px; cursor: pointer; white-space: nowrap; border: 1px solid transparent; font-variant-numeric: tabular-nums; }
+  .m-hi { background: var(--new-soft); color: var(--new); border-color: color-mix(in srgb, var(--new) 45%, transparent); }
+  .m-mid { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+  .m-lo { background: transparent; color: var(--text-muted); border-color: var(--border); }
+  @media (prefers-color-scheme: dark) { .m-mid { color: var(--link); } }
+  dialog.dlg { width: min(720px, 94vw); max-height: 88vh; padding: 0; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-1); color: var(--text-primary); box-shadow: var(--shadow-lg); }
+  dialog.dlg::backdrop { background: rgba(4, 30, 66, .45); }
+  dialog.dlg[open] { display: flex; flex-direction: column; }
+  .dlg-hd { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--hero-bg); color: var(--hero-ink); }
+  .dlg-hd h3 { margin: 0; font-family: Georgia, "Iowan Old Style", serif; font-weight: 400; font-size: 20px; }
+  .dlg-x { border: none; background: rgba(255,255,255,.1); color: #fff; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+  .dlg-x:hover { background: rgba(255,255,255,.2); }
+  .dlg-bd { padding: 16px 18px 18px; overflow: auto; }
+  .dlg-bd h4 { margin: 18px 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--text-secondary); }
+  .dlg-bd h4 span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--text-muted); }
+  .privacy { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: var(--new-soft); color: var(--text-primary); font-size: 13px; }
+  .privacy svg { flex: none; width: 18px; height: 18px; color: var(--new); margin-top: 1px; }
+  .drop { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 26px 16px; border: 2px dashed var(--accent-line); border-radius: 12px; cursor: pointer; text-align: center; color: var(--text-secondary); background: var(--surface-2); transition: all .15s; }
+  .drop:hover, .drop.over { border-color: var(--accent); background: var(--accent-soft); }
+  .drop svg { width: 28px; height: 28px; color: var(--accent); }
+  @media (prefers-color-scheme: dark) { .drop svg { color: var(--link); } }
+  .drop b { color: var(--text-primary); font-size: 15px; } .drop u { color: var(--link); }
+  .drop small { color: var(--text-muted); }
+  .paste { margin-top: 12px; font-size: 13px; }
+  .paste summary { cursor: pointer; color: var(--link); }
+  .paste textarea { width: 100%; margin-top: 8px; font: inherit; font-size: 13px; color: var(--text-primary); background: var(--surface-2); border: 1px solid var(--border); border-radius: 9px; padding: 8px 10px; resize: vertical; }
+  .remember { display: flex; gap: 8px; align-items: center; margin-top: 12px; font-size: 13px; }
+  .remember input { accent-color: var(--accent); }
+  .rs-status { min-height: 20px; margin: 10px 0 0; font-size: 13px; color: var(--text-secondary); }
+  .rs-status.err { color: var(--warn); }
+  .fine { margin: 12px 0 0; font-size: 12px; color: var(--text-muted); }
+  .btn { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary); border-radius: 9px; padding: 7px 14px; cursor: pointer; }
+  .btn:hover { border-color: var(--accent-line); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.15); }
+  .dlg-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .rs-file { display: flex; align-items: center; gap: 8px; font-size: 13.5px; flex-wrap: wrap; }
+  .rs-file span { color: var(--text-muted); }
+  .rs-file .sp { flex: 1; }
+  .rs-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .rs-card { border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--surface-2); min-width: 0; }
+  .rs-card .k { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); }
+  .rs-card .v { margin-top: 4px; font-size: 14px; font-weight: 600; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .rs-card .v.small { font-size: 12.5px; font-weight: 500; line-height: 1.4; }
+  .rs-card small { display: block; margin-top: 4px; font-size: 11.5px; color: var(--text-muted); }
+  .rs-card input[type=number], .rs-card select { font: inherit; font-size: 13px; color: var(--text-primary); background: var(--surface-1); border: 1px solid var(--border); border-radius: 7px; padding: 3px 6px; }
+  .rs-card input[type=number] { width: 62px; }
+  .rs-card label { font-size: 12px; font-weight: 500; display: inline-flex; gap: 4px; align-items: center; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips .sk { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--text-primary); border-radius: 999px; padding: 2px 4px 2px 10px; }
+  .chips .sk button { border: none; background: none; color: var(--text-muted); cursor: pointer; font-size: 12px; padding: 0 4px; }
+  .chips .sk button:hover { color: var(--warn); }
+  .chips .sk.added { border-style: dashed; }
+  .chips .gap { font-size: 12.5px; border: 1px solid color-mix(in srgb, var(--warn) 40%, transparent); background: var(--warn-soft); color: var(--warn); border-radius: 999px; padding: 2px 10px; }
+  .chips .gap.pref { border-style: dashed; background: transparent; }
+  .rs-add { display: flex; gap: 6px; margin-top: 8px; }
+  .rs-add input { flex: 1; min-width: 0; font: inherit; font-size: 13px; color: var(--text-primary); background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; }
+  .rs-review { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .rs-review li { display: flex; gap: 9px; font-size: 13px; padding: 7px 10px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--grid); }
+  .rs-review li .ic { flex: none; width: 18px; text-align: center; font-weight: 700; }
+  .rs-review li.rv-good .ic { color: var(--new); } .rs-review li.rv-tip .ic { color: var(--warn); }
+  .cmp-job a { font-size: 16px; font-weight: 600; color: var(--text-primary); text-decoration: none; }
+  .cmp-job a:hover { color: var(--link); text-decoration: underline; }
+  .cmp-job div { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
+  .cmp-sum { display: flex; gap: 14px; align-items: center; margin-top: 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); font-size: 13.5px; }
+  .ring { flex: none; width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 17px; font-variant-numeric: tabular-nums; border: 4px solid; }
+  .ring.m-hi { border-color: var(--new); } .ring.m-mid { border-color: var(--accent); } .ring.m-lo { border-color: var(--border); }
+  .cmp-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .cmp-list li { display: flex; gap: 10px; font-size: 13px; line-height: 1.45; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--grid); }
+  .cmp-list li .ic { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 800; margin-top: 1px; }
+  .cmp-list li small { display: block; color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+  .st-met .ic { background: var(--new-soft); color: var(--new); }
+  .st-part .ic { background: var(--intern-soft); color: var(--intern); }
+  .st-miss { background: color-mix(in srgb, var(--warn-soft) 60%, transparent); }
+  .st-miss .ic { background: var(--warn-soft); color: var(--warn); }
+  .st-na .ic { background: var(--grid); color: var(--text-muted); }
+  .cmp-missing { margin-top: 18px; padding: 12px 14px; border-radius: 12px; border: 1px solid color-mix(in srgb, var(--warn) 30%, transparent); background: var(--warn-soft); }
+  .cmp-missing h4 { margin-top: 0; color: var(--warn); }
+  .cmp-missing ul { margin: 0 0 8px; padding-left: 18px; font-size: 13px; }
+  .cmp-missing p { margin: 8px 0 0; font-size: 12.5px; color: var(--text-secondary); }
+  .cmp-missing .chips .gap { background: var(--surface-1); }
+  @media (max-width: 640px) { .rs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ask-form { flex-wrap: wrap; } .rs-open { padding: 8px 12px; } }
+
+  .layout > * { min-width: 0; }
+  @media (max-width: 900px) {
+    .tablewrap { overflow-x: auto; }
+    td.co, td.date { white-space: normal; }
+    .co-in .av { display: none; }
+    th, td { padding-left: 10px; padding-right: 10px; }
+  }
+  @media (max-width: 1040px) { .layout { grid-template-columns: 1fr; } .side { position: static; } .bars { max-height: none; } }
+  @media (max-width: 760px) { .tiles { grid-template-columns: repeat(2, 1fr); } h1 { font-size: 27px; } .hero-inner, .wrap { padding: 0 16px; } }
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Non-engineering roles · NatSec100 + Defense primes</div>
+      <h1>Georgetown National Security Tech Job Tracker</h1>
+      <p class="sub">Business, finance, strategy, policy, marketing, people and legal roles at defense-tech startups and the legacy primes, pulled daily from each company's own hiring platform.</p>
+    </div>
+    <div class="updated"><span class="dot"></span><span id="updated"></span></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div id="banner"></div>
+
+  <div class="tiles">
+    <button class="tile" data-preset="all"><div class="k"><i class="i-open"></i>Open roles</div><div class="v" id="t-open">–</div><div class="h">matching your role filters</div></button>
+    <button class="tile" data-preset="new"><div class="k"><i class="i-new"></i>New this week</div><div class="v" id="t-new">–</div><div class="h">posted or first seen in 7 days</div></button>
+    <button class="tile" data-preset="intern"><div class="k"><i class="i-intern"></i>Internships</div><div class="v" id="t-intern">–</div><div class="h">intern, co-op, fellowship</div></button>
+    <button class="tile" data-preset="closed"><div class="k"><i class="i-closed"></i>Recently closed</div><div class="v" id="t-closed">–</div><div class="h">taken down in last 30 days</div></button>
+  </div>
+
+  <div class="layout">
+    <section class="panel main-panel">
+      <div class="askbar">
+        <form class="ask-form" id="ask-form" autocomplete="off">
+          <div class="ask-field">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9Z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8Z"/></svg>
+            <input type="text" id="ask-q" aria-label="Ask in plain English" placeholder='Ask in plain English, e.g. "Palantir jobs in the DC area"'>
+          </div>
+          <button type="submit" class="ask-go">Show me</button>
+          <button type="button" class="rs-open" id="rs-open" title="Find the roles that best match your resume"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg><span id="rs-open-label">Match my resume</span></button>
+        </form>
+        <div class="ask-examples" id="ask-examples"><span>Try:</span></div>
+        <div class="ask-result" id="ask-result" hidden></div>
+        <div class="rs-bar" id="rs-bar" hidden></div>
+      </div>
+      <div class="groupbar">
+        <div class="seg" id="seg" role="tablist" aria-label="Company group"></div>
+        <div class="fitwrap"><span class="fitlabel">MBA fit</span><div class="seg" id="fitseg" role="tablist" aria-label="MBA fit"></div></div>
+      </div>
+      <div class="filters">
+        <details class="dd" id="co-dd">
+          <summary id="co-sum">All companies</summary>
+          <div class="dd-menu">
+            <div class="dd-actions">
+              <button type="button" data-act="all">Select all</button>
+              <button type="button" data-act="none">Clear</button>
+            </div>
+            <div id="co-list"></div>
+          </div>
+        </details>
+        <label class="chip sel" id="f-new-wrap"><span class="sel-k">New</span><select id="f-new" aria-label="Show only roles new in the last…">
+          <option value="0">Any time</option><option value="24">Last 24 hours</option><option value="72">Last 72 hours</option><option value="168">This week</option>
+        </select></label>
+        <label class="chip sel" id="f-type-wrap"><span class="sel-k">Type</span><select id="f-type" aria-label="Job type">
+          <option value="">All job types</option><option value="jobs">Full- &amp; part-time</option><option value="full">Full-time</option><option value="part">Part-time</option><option value="intern">Internships</option>
+        </select></label>
+        <label class="chip"><input type="checkbox" id="f-us"> US only</label>
+        <label class="chip"><input type="checkbox" id="f-closed"> Show closed</label>
+        <button type="button" class="clear-all" id="clear-all" hidden>Reset filters</button>
+        <span class="count" id="count"></span>
+      </div>
+      <div class="nearbar" id="nearbar">
+        <span class="lbl">Near</span>
+        <div class="near-input" id="near-box">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <input type="text" id="near-q" placeholder="Any US city, e.g. Arlington, VA" autocomplete="off" aria-label="Show roles near a US city" role="combobox" aria-expanded="false" aria-controls="near-sugg">
+          <button type="button" class="near-clear" id="near-clear" aria-label="Clear location" hidden>✕</button>
+          <div class="near-sugg" id="near-sugg" role="listbox" hidden></div>
+        </div>
+        <div class="seg radius off" id="radius" role="tablist" aria-label="Distance"></div>
+        <label class="chip"><input type="checkbox" id="near-remote"> + Remote</label>
+        <span class="nearhint" id="near-hint"></span>
+      </div>
+      <div class="cats" id="cats"></div>
+      <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th data-sort="title">Role <span class="arrow"></span></th>
+          <th data-sort="fit">MBA fit <span class="arrow"></span></th>
+          <th data-sort="company">Company <span class="arrow"></span></th>
+          <th data-sort="location">Location <span class="arrow"></span></th>
+          <th data-sort="date">Posted <span class="arrow"></span></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      </div>
+      <div class="empty" id="empty" hidden>No roles match these filters.</div>
+    </section>
+
+    <aside class="panel side">
+      <h2>Your MBA-fit feedback</h2>
+      <div class="fb" id="fb">
+        <div class="fb-row"><div class="fb-counts" id="fb-counts"></div></div>
+        <div class="fb-actions">
+          <button type="button" class="primary" id="fb-export">Export votes</button>
+          <button type="button" id="fb-clear">Clear</button>
+        </div>
+        <p id="fb-help">Use 👍 / 👎 on any role. Votes apply right away in this browser. Export them and save the file in the tracker's <b>feedback</b> folder so the daily refresh (and everyone's view) learns from them.</p>
+      </div>
+      <h2>My schools <span>for Find alumni</span></h2>
+      <div class="schools">
+        <ul class="school-list" id="school-list"></ul>
+        <form class="school-add" id="school-add" autocomplete="off">
+          <input type="text" id="school-name" placeholder="Add a school, e.g. University of Virginia" aria-label="School name">
+          <input type="text" id="school-url" placeholder="Optional: its LinkedIn school page address" aria-label="LinkedIn school page address (optional)">
+          <button type="submit">Add school</button>
+        </form>
+        <p>Saved in this browser only. Adding the school's LinkedIn page (linkedin.com/school/…) unlocks LinkedIn's more precise alumni tool.</p>
+      </div>
+      <h2>Matching roles by company <span id="side-sub"></span></h2>
+      <div class="bars" id="bars"></div>
+      <div class="note">
+        <p>Startups are ranked by 2026 NatSec100 position. Click companies to add or remove them from the filter. Names in orange couldn't be fully reached on the last run. Hover for details.</p>
+        <p>“Posted” is the date the company's hiring platform reports. Where it gives none, it's the date this tracker first saw the role (shown as “seen”).</p>
+      </div>
+    </aside>
+  </div>
+  <footer>Startup list: 2026 NatSec100, Silicon Valley Defense Group<span class="sep">|</span>Primes: company career sites<span class="sep">|</span>Updates daily at 8:00 AM and 5:00 PM</footer>
+</div>
+<div class="tip" id="tip"></div>
+<div class="alum-menu" id="alum-menu" role="menu" hidden></div>
+<dialog class="dlg" id="rs-dlg" aria-labelledby="rs-title">
+  <div class="dlg-hd"><h3 id="rs-title">Match my resume</h3><button type="button" class="dlg-x" data-close aria-label="Close">✕</button></div>
+  <div class="dlg-bd" id="rs-body"></div>
+</dialog>
+<dialog class="dlg" id="cmp-dlg" aria-labelledby="cmp-title">
+  <div class="dlg-hd"><h3 id="cmp-title">Your resume vs. this role</h3><button type="button" class="dlg-x" data-close aria-label="Close">✕</button></div>
+  <div class="dlg-bd" id="cmp-body"></div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-msg"></span><button type="button" id="toast-undo">Undo</button></div>
+
+<script src="data/jobs-data.js"></script>
+<script src="data/places.js"></script>
+<script src="data/run-status.js"></script>
+<script>
+(function () {
+  const D = window.JOB_DATA;
+  const $ = (id) => document.getElementById(id);
+  // true on the shared website (GitHub Pages); false when opened from the tracker folder or the local preview
+  const HOSTED = /^https?:$/.test(location.protocol) && !/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+  if (HOSTED && $('fb-help')) $('fb-help').innerHTML = 'Use 👍 / 👎 on any role. Votes apply right away in this browser. To help improve the ratings for everyone, click <b>Export votes</b> and send the file to the tracker’s owner.';
+  if (!D) {
+    $('banner').innerHTML = '<div class="banner">No data yet. Run <b>Update-Jobs.ps1</b> (or double-click <b>Run tracker.cmd</b>) to fetch jobs, then refresh this page.</div>';
+    return;
+  }
+
+  const DAY = 864e5;
+  const today = new Date(D.generated.slice(0, 10) + 'T00:00:00');
+  const NOW = Date.now();
+  const daysAgo = (iso) => iso ? Math.round((today - new Date(iso.slice(0, 10) + 'T00:00:00')) / DAY) : null;
+  const fmt = (iso) => {
+    const d = new Date(iso.slice(0, 10) + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: d.getFullYear() !== today.getFullYear() ? 'numeric' : undefined });
+  };
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const US_RX = /united states|\bUSA?\b|remote.{0,6}(us|united)|,\s*(AL|AK|AZ|AR|CA|CO|CT|DC|DE|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY)\b|alabama|arizona|california|colorado|florida|georgia|hawaii|maryland|massachusetts|new mexico|new york|north carolina|ohio|texas|virginia|washington|utah|costa mesa|austin|san francisco|san diego|seattle|houston|torrance|el segundo|redondo|los angeles|mojave|arlington|boston|denver|huntsville|kent|louisville|centennial|broomfield|mountain view|palo alto|san mateo|sunnyvale|greensboro|albuquerque|honolulu|dallas|atlanta|chicago|reston|bellevue|long beach|irvine|pittsburgh|clarksburg/i;
+
+  // derived fields
+  for (const j of D.jobs) {
+    const postedIso = j.posted && /^\d{4}-\d{2}-\d{2}/.test(j.posted) ? j.posted.slice(0, 10) : null;
+    j.approx = !!(j.posted && /earlier/.test(j.posted));
+    j.dateIso = postedIso || (j.baseline ? null : j.firstSeen);
+    j.dateKind = postedIso ? 'posted' : (j.baseline ? 'unknown' : 'seen');
+    // how new is it, in hours? Use the earliest sign of it: when the tracker first saw it (exact time for roles
+    // seen from Nov 27, 2026 on; start of that day before then) or the end of its posting date, if the board gives one.
+    const seen = j.baseline ? null : (j.seenAt ? new Date(j.seenAt) : (j.firstSeen ? new Date(j.firstSeen.slice(0, 10) + 'T00:00:00') : null));
+    const postEnd = postedIso && !j.approx ? new Date(postedIso + 'T23:59:59') : null;
+    const since = seen && postEnd ? Math.min(seen, postEnd) : (seen || postEnd);
+    j.ageH = since ? Math.max(0, (NOW - since) / 36e5) : null;
+    j.isNew = j.active && j.ageH !== null && j.ageH <= 168;
+    j.jt = j.intern ? 'intern' : (j.jt || 'full');
+    j.isUS = US_RX.test(j.location || '');
+  }
+
+  // cats / cos: empty set = no filter (show all)
+  // ---- distance ("Near") ----
+  for (const j of D.jobs) j.pts = j.geo ? j.geo.split(';').map((p) => p.split(',').map(Number)) : [];
+  const HAS_GEO = D.jobs.some((j) => j.pts.length) && Array.isArray(window.PLACES);
+  const toRad = (d) => d * Math.PI / 180;
+  const miles = (a, b) => {              // great-circle distance in miles
+    const dLat = toRad(b[0] - a[0]), dLon = toRad(b[1] - a[1]);
+    const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a[0])) * Math.cos(toRad(b[0])) * Math.sin(dLon / 2) ** 2;
+    return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+  };
+  const distOf = (j) => {                // nearest of the role's locations to the chosen place
+    if (!state.near || !j.pts.length) return null;
+    const c = [state.near.lat, state.near.lon];
+    return Math.min(...j.pts.map((p) => miles(c, p)));
+  };
+  const inNear = (j) => {
+    if (!state.near) return true;
+    const d = distOf(j);
+    if (d !== null && d <= state.radius) return true;
+    return state.nearRemote && j.remote;
+  };
+
+  const state = { q: '', group: '', fit: 'possible', near: null, radius: 25, nearRemote: false, cos: new Set(), cats: new Set(), newH: 0, jtype: '', fUS: false, fClosed: false, onlyClosed: false, sort: 'date', dir: -1 };
+  // MBA fit: 'strong' = strong only, 'possible' = strong + possible (default), 'all' = everything
+  const HAS_FIT = D.jobs.some((j) => j.fit);
+  const FIT_LABEL = { strong: 'Strong', possible: 'Possible', low: 'Low' };
+
+  // 👍 / 👎 votes. Saved in this browser; votes merged in by the daily refresh arrive as j.vote.
+  const VOTE_KEY = 'natsec-tracker-votes';
+  let votes = {};
+  try { votes = JSON.parse(localStorage.getItem(VOTE_KEY) || '{}') || {}; } catch (e) { votes = {}; }
+  const saveVotes = () => { try { localStorage.setItem(VOTE_KEY, JSON.stringify(votes)); } catch (e) {} };
+  const voteOf = (j) => (j.key && votes[j.key]) ? votes[j.key].v : (j.vote || 0);
+  // a vote overrides the rules: 👍 = Strong, 👎 = hidden (Low)
+  const effFit = (j) => { const v = voteOf(j); return v > 0 ? 'strong' : v < 0 ? 'low' : (j.ruleFit || j.fit); };
+  const inFit = (j) => !HAS_FIT || state.fit === 'all' || effFit(j) === 'strong' || (state.fit === 'possible' && effFit(j) === 'possible');
+  const THUMB = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3Zm0 0 4-8a3 3 0 0 1 3 3v4h5.5a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 18.1 21H7"/></svg>';
+  const THUMB_DOWN = THUMB.replace('aria-hidden="true"', 'aria-hidden="true" style="transform:rotate(180deg)"');
+  const GROUPS = (D.groups && D.groups.length ? D.groups : [{ id: 'natsec', name: 'NatSec100' }])
+    .filter((g) => D.companies.some((c) => (c.group || 'natsec') === g.id));
+  const groupOf = Object.fromEntries(D.companies.map((c) => [c.name, c.group || 'natsec']));
+  const SITE = Object.fromEntries(D.companies.filter((c) => c.website && /^https?:\/\//.test(c.website)).map((c) => [c.name, c.website]));
+  const inGroup = (j) => !state.group || groupOf[j.company] === state.group;
+
+  // remember category/company picks between visits
+  const SAVE_KEY = 'natsec-tracker-filters';
+  try {
+    const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
+    const knownCos = new Set(D.companies.map((c) => c.name));
+    (saved.cats || []).filter((c) => D.categories.includes(c)).forEach((c) => state.cats.add(c));
+    (saved.cos || []).filter((c) => knownCos.has(c)).forEach((c) => state.cos.add(c));
+    if (GROUPS.some((g) => g.id === saved.group)) state.group = saved.group;
+    if (['strong', 'possible', 'all'].includes(saved.fit)) state.fit = saved.fit;
+    if (saved.near && typeof saved.near.lat === 'number') state.near = saved.near;
+    if ([10, 25, 50, 100].includes(saved.radius)) state.radius = saved.radius;
+    state.nearRemote = !!saved.nearRemote;
+  } catch (e) { /* ignore */ }
+  const persist = () => { try { localStorage.setItem(SAVE_KEY, JSON.stringify({ group: state.group, fit: state.fit, cats: [...state.cats], cos: [...state.cos], near: state.near, radius: state.radius, nearRemote: state.nearRemote })); } catch (e) {} };
+  const toggle = (set, v) => { set.has(v) ? set.delete(v) : set.add(v); };
+
+  // header
+  $('updated').textContent = 'Updated ' + new Date(D.generated).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  const initials = (name) => {
+    const w = name.replace(/[^A-Za-z0-9 ]/g, ' ').split(/\s+/).filter(Boolean);
+    return (w.length > 1 ? w[0][0] + w[1][0] : name.slice(0, 2)).toUpperCase();
+  };
+  const failed = D.companies.filter((c) => !c.ok);
+  let bannerHtml = '';
+  if (failed.length) bannerHtml += '<div class="banner">Couldn\'t reach ' + failed.map((c) => esc(c.name)).join(', ') + ' on the last run. Their previously seen roles are still shown.</div>';
+  // daily refresh health (written by Run-Daily.ps1)
+  const RS = window.RUN_STATUS;
+  if (RS && RS.status && RS.status !== 'ok') {
+    const when = new Date(RS.at).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+    bannerHtml += RS.status === 'timeout'
+      ? `<div class="banner"><b>The ${esc(when)} refresh ran past its ${RS.limit}-minute limit and was stopped.</b> Some companies didn't update, so their listings are from the previous refresh. ${HOSTED ? 'It will update again at the next scheduled time (8 AM or 5 PM).' : 'It\'ll try again at the next scheduled time (8 AM or 5 PM), or double-click <b>Run tracker.cmd</b> to refresh now.'}</div>`
+      : `<div class="banner"><b>The ${esc(when)} refresh failed</b> after ${RS.minutes} min, so these listings are from the previous refresh. Details are in <b>data\\last-run-errors.log</b>.</div>`;
+  }
+  if (bannerHtml) $('banner').innerHTML = bannerHtml;
+
+  // everything except the company and category filters
+  function base() {
+    const q = state.q.toLowerCase();
+    return D.jobs.filter((j) =>
+      inGroup(j) && inFit(j) &&
+      (state.onlyClosed ? !j.active : state.fClosed ? true : j.active) &&
+      (!state.newH || (j.active && j.ageH !== null && j.ageH <= state.newH)) &&
+      inType(j) &&
+      (!state.fUS || j.isUS) &&
+      inNear(j) &&
+      (!q || (j.title + ' ' + j.company + ' ' + j.location + ' ' + j.dept).toLowerCase().includes(q)));
+  }
+
+  // job type: '' all, 'jobs' = anything but internships, or one exact type
+  const inType = (j) => !state.jtype || (state.jtype === 'jobs' ? j.jt !== 'intern' : j.jt === state.jtype);
+  const inCos  = (j) => !state.cos.size  || state.cos.has(j.company);
+  const inCats = (j) => !state.cats.size || state.cats.has(j.category);
+
+  // list = jobs already narrowed to the selected companies (so counts reflect them)
+  function renderCats(list) {
+    const counts = {}; for (const j of list) counts[j.category] = (counts[j.category] || 0) + 1;
+    const allOn = !state.cats.size;
+    const all = `<button class="cat${allOn ? ' on' : ''}" data-cat="">All categories<span class="n">${list.length}</span></button>`;
+    $('cats').innerHTML = '<div class="cats-label">Role categories · pick any</div>' + all + D.categories.map((c) => {
+      const n = counts[c] || 0, on = state.cats.has(c);
+      return `<button class="cat${on ? ' on' : ''}${n ? '' : ' zero'}" data-cat="${esc(c)}" aria-pressed="${on}">${esc(c)}<span class="n">${n}</span><span class="x">✕</span></button>`;
+    }).join('');
+  }
+
+  // companies grouped (NatSec100 / primes), limited to the active group switch
+  function visibleGroups() {
+    return GROUPS.filter((g) => !state.group || g.id === state.group)
+      .map((g) => ({ ...g, companies: D.companies.filter((c) => (c.group || 'natsec') === g.id) }))
+      .filter((g) => g.companies.length);
+  }
+
+  // list = jobs already narrowed to the selected categories
+  function renderCompanies(list) {
+    const counts = {}; for (const j of list) counts[j.company] = (counts[j.company] || 0) + 1;
+    $('co-list').innerHTML = visibleGroups().map((g) =>
+      `<div class="dd-group"><span>${esc(g.name)}</span><button type="button" data-group="${esc(g.id)}">Select group</button></div>` +
+      g.companies.map((c) => `
+      <label class="dd-item"><input type="checkbox" value="${esc(c.name)}"${state.cos.has(c.name) ? ' checked' : ''}>
+        <span class="rk">${c.rank || ''}</span><span>${esc(c.name)}</span><span class="n">${counts[c.name] || 0}</span></label>`).join('')
+    ).join('');
+    const n = state.cos.size;
+    $('co-sum').textContent = (!n || n === D.companies.length) ? 'All companies' : n === 1 ? [...state.cos][0] : n + ' companies';
+    $('co-dd').classList.toggle('active', n > 0);
+    return counts;
+  }
+
+  function renderBars(counts) {
+    const groups = visibleGroups();
+    const max = Math.max(1, ...groups.flatMap((g) => g.companies.map((c) => counts[c.name] || 0)));
+    $('bars').innerHTML = groups.map((g) =>
+      (groups.length > 1 || GROUPS.length > 1 ? `<div class="bar-group"><span>${esc(g.name)}</span></div>` : '') +
+      g.companies.map((c) => {
+      const n = counts[c.name] || 0;
+      const cls = ['bar-row', state.cos.has(c.name) ? 'on' : '', c.ok ? '' : (c.partial ? 'partial' : 'err'), n ? '' : 'zero'].join(' ');
+      let tip = c.ok ? `${c.name}: ${n} matching of ${c.total.toLocaleString()} open roles fetched`
+              : c.partial ? `${c.name}: ${n} matching. Some boards failed (${c.error})`
+              : `${c.name}: fetch failed (${c.error})`;
+      if (c.note) tip += ` · ${c.note}`;
+      return `<div class="${cls}" data-co="${esc(c.name)}" data-tip="${esc(tip)}">
+        <div class="nm"><span class="rk">${c.rank || ''}</span>${esc(c.name)}</div>
+        <div class="track"><div class="fill" style="width:${(n / max) * 100}%"></div></div>
+        <div class="num">${n}</div></div>`;
+    }).join('')).join('');
+    $('side-sub').textContent = !state.cats.size ? '' : state.cats.size === 1 ? [...state.cats][0] : state.cats.size + ' categories';
+  }
+
+  function sortKey(j) {
+    switch (state.sort) {
+      case 'title': return j.title.toLowerCase();
+      case 'company': return j.company.toLowerCase();
+      case 'location': {
+        if (state.near) { const d = distOf(j); return d === null ? 'zzzz' : String(Math.round(d * 10)).padStart(6, '0'); }
+        return (j.location || '').toLowerCase();
+      }
+      case 'fit': return String(1000 + (j.fitScore || 0) + voteOf(j) * 500) + (j.dateIso || '0000');
+      case 'match': { const m = matchOf(j); return String(1000 + (m ? m.score : -500)) + (j.dateIso || '0000'); }
+      default: return j.dateIso || '0000';
+    }
+  }
+
+  function renderRows(list) {
+    const rows = list.slice().sort((a, b) => {
+      const ka = sortKey(a), kb = sortKey(b);
+      return ka < kb ? -state.dir : ka > kb ? state.dir : 0;
+    });
+    const html = rows.map((j) => {
+      let date;
+      if (j.dateKind === 'unknown') date = `<span title="Already open when tracking started; this platform doesn't publish a posting date">before ${fmt(j.firstSeen)}</span>`;
+      else date = (j.approx ? '≤ ' : '') + fmt(j.dateIso) + (j.dateKind === 'seen' ? ' <span class="meta">(seen)</span>' : '');
+      const badges = (j.isNew ? '<span class="badge b-new">NEW</span>' : '') +
+                     (j.intern ? '<span class="badge b-intern">INTERN</span>' : '') +
+                     (!j.active ? '<span class="badge b-closed">CLOSED ' + fmt(j.closedOn) + '</span>' : '');
+      const v = voteOf(j), ef = effFit(j);
+      const why = (v > 0 ? 'Voted a good fit 👍. ' : v < 0 ? 'Voted not a fit 👎 (hidden unless "All roles"). ' : '') +
+        `Rules score ${j.fitScore}: ` + (j.fitWhy ? j.fitWhy.split('; ').join(' · ') : 'no strong signals either way.');
+      const fitCell = !j.fit ? '' : `<div class="fitcell">
+          <span class="fitpill fit-${ef}" data-tip="${esc(why)}">${FIT_LABEL[ef]}<span class="sc">${v ? (v > 0 ? '👍' : '👎') : j.fitScore}</span></span>
+          ${j.key ? `<span class="votes">
+            <button type="button" class="vote up${v > 0 ? ' on' : ''}" data-key="${esc(j.key)}" data-v="1" aria-pressed="${v > 0}" aria-label="Good fit for MBAs" title="Good fit for MBAs">${THUMB}</button>
+            <button type="button" class="vote down${v < 0 ? ' on' : ''}" data-key="${esc(j.key)}" data-v="-1" aria-pressed="${v < 0}" aria-label="Not a fit for MBAs" title="Not a fit, hide it">${THUMB_DOWN}</button>
+          </span>` : ''}${matchPill(j)}</div>`;
+      return `<tr class="${j.active ? '' : 'closed'}${v < 0 ? ' voted-down' : ''}">
+        <td class="title"><a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>${badges}
+          <div class="meta">${esc(j.category)}${j.dept ? ' · ' + esc(j.dept) : ''}</div>
+          ${j.key ? `<div class="row-acts"><button type="button" class="alum-btn" data-key="${esc(j.key)}" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 6M18.5 14.5c1.6.8 2.5 2.6 2.5 5.5"/></svg>Find alumni</button><button type="button" class="alum-btn cmp-btn" data-cmp="${esc(j.key)}" title="See which of this role's qualifications your resume shows, and what's missing">${DOC_ICON}Compare my resume</button></div>` : ''}</td>
+        <td class="fitc">${fitCell}</td>
+        <td class="co"><span class="co-in"><span class="av" aria-hidden="true">${esc(initials(j.company))}</span>${SITE[j.company]
+          ? `<a class="co-link" href="${esc(SITE[j.company])}" target="_blank" rel="noopener noreferrer" title="Visit ${esc(j.company)}'s website">${esc(j.company)}<span class="ext" aria-hidden="true">↗</span></a>`
+          : esc(j.company)}</span></td>
+        <td class="loc">${esc(j.location || '—')}${(() => {
+          if (!state.near) return '';
+          const d = distOf(j);
+          return d !== null ? `<br><span class="dist">${d < 1 ? '< 1' : Math.round(d)} mi</span>` : (j.remote ? '<br><span class="dist">Remote</span>' : '');
+        })()}</td>
+        <td class="date">${date}</td></tr>`;
+    }).join('');
+    $('rows').innerHTML = html;
+    $('empty').hidden = rows.length > 0;
+    $('count').innerHTML = '<b>' + rows.length.toLocaleString() + '</b> role' + (rows.length === 1 ? '' : 's');
+    document.querySelectorAll('th').forEach((th) => {
+      th.querySelector('.arrow').textContent = th.dataset.sort === state.sort ? (state.dir > 0 ? '▲' : '▼') : '';
+    });
+  }
+
+  function renderSeg() {
+    const n = (id) => D.jobs.filter((j) => j.active && inFit(j) && (!id || groupOf[j.company] === id)).length.toLocaleString();
+    const opts = [{ id: '', name: 'All companies' }, ...GROUPS];
+    $('seg').innerHTML = GROUPS.length < 2 ? '' : opts.map((g) =>
+      `<button type="button" role="tab" aria-selected="${state.group === g.id}" class="${state.group === g.id ? 'on' : ''}" data-group="${esc(g.id)}">${esc(g.name)}<span class="n">${n(g.id)}</span></button>`).join('');
+    const fitOpts = [['strong', 'Strong'], ['possible', 'Strong + possible'], ['all', 'All roles']];
+    $('fitseg').innerHTML = !HAS_FIT ? '' : fitOpts.map(([id, label]) =>
+      `<button type="button" role="tab" aria-selected="${state.fit === id}" class="${state.fit === id ? 'on' : ''}" data-fit="${id}">${label}</button>`).join('');
+    $('fitseg').parentElement.hidden = !HAS_FIT;
+  }
+
+  // ---- "Near" controls ----
+  const placeLabel = (p) => `${p.name}, ${p.st}`;
+  function renderNear() {
+    $('nearbar').hidden = !HAS_GEO;
+    if (!HAS_GEO) return;
+    const on = !!state.near;
+    $('near-box').classList.toggle('set', on);
+    $('near-clear').hidden = !on;
+    if (document.activeElement !== $('near-q')) $('near-q').value = on ? placeLabel(state.near) : '';
+    $('radius').classList.toggle('off', !on);
+    $('radius').innerHTML = [10, 25, 50, 100].map((r) =>
+      `<button type="button" role="tab" aria-selected="${state.radius === r}" class="${state.radius === r ? 'on' : ''}" data-r="${r}">${r} mi</button>`).join('');
+    $('near-remote').checked = state.nearRemote;
+    if (on) {
+      // roles hidden only because their posting doesn't name a mappable US city
+      const unplaced = D.jobs.filter((j) => j.active && inGroup(j) && inFit(j) && !j.pts.length && !(state.nearRemote && j.remote)).length;
+      $('near-hint').textContent = unplaced ? `${unplaced.toLocaleString()} roles without a mappable US city (e.g. "2 Locations", overseas) are hidden` : '';
+    } else $('near-hint').textContent = '';
+  }
+
+  // city suggestions from the Census place list (biggest places first)
+  const PL = HAS_GEO ? window.PLACES.map((p) => ({ name: p[0], st: p[1], lat: p[2], lon: p[3], area: p[4] || 0, key: (p[0] + ' ' + p[1]).toLowerCase().replace(/\./g, '') })) : [];
+  let sugg = [], hl = -1;
+  function suggest(text) {
+    const t = text.toLowerCase().replace(/\./g, '').replace(/,/g, ' ').replace(/\s+/g, ' ').trim()
+      .replace(/^saint /, 'st ').replace(/^ft /, 'fort ').replace(/^washington dc$/, 'washington dc');
+    if (t.length < 2) return [];
+    const parts = t.split(' '), last = parts[parts.length - 1];
+    const stFilter = last.length === 2 && parts.length > 1 ? last.toUpperCase() : null;
+    const namePart = stFilter ? parts.slice(0, -1).join(' ') : t;
+    return PL.filter((p) => p.key.startsWith(namePart) && (!stFilter || p.st === stFilter) || (!stFilter && p.key.startsWith(t)))
+      .sort((a, b) => (b.area - a.area) || a.name.localeCompare(b.name)).slice(0, 8);
+  }
+  function showSugg() {
+    const box = $('near-sugg');
+    box.innerHTML = sugg.map((p, i) => `<button type="button" role="option" data-i="${i}" class="${i === hl ? 'hl' : ''}">${esc(p.name)} <span>${p.st}</span></button>`).join('');
+    box.hidden = !sugg.length;
+    $('near-q').setAttribute('aria-expanded', String(!!sugg.length));
+  }
+  function pickPlace(p) {
+    state.near = { name: p.name, st: p.st, lat: p.lat, lon: p.lon };
+    sugg = []; hl = -1; showSugg();
+    $('near-q').value = placeLabel(state.near); $('near-q').blur();
+    if (state.sort === 'date') { state.sort = 'location'; state.dir = 1; }   // nearest first
+    render();
+  }
+
+  function renderTiles() {
+    const all = D.jobs.filter((j) => inGroup(j) && inFit(j));
+    const act = all.filter((j) => j.active);
+    $('t-open').textContent = act.length.toLocaleString();
+    $('t-new').textContent = act.filter((j) => j.isNew).length.toLocaleString();
+    $('t-intern').textContent = act.filter((j) => j.intern).length.toLocaleString();
+    $('t-closed').textContent = all.filter((j) => !j.active).length.toLocaleString();
+    const preset = state.onlyClosed ? 'closed' : state.newH === 168 && !state.jtype ? 'new' : !state.newH && state.jtype === 'intern' ? 'intern' : !state.newH && !state.jtype ? 'all' : '';
+    document.querySelectorAll('.tile').forEach((t) => t.classList.toggle('on', t.dataset.preset === preset));
+    // keep the two dropdowns in step with the filters (tiles and the Ask box change them too)
+    $('f-new').value = String(state.newH); $('f-type').value = state.jtype;
+    $('f-new-wrap').classList.toggle('on', !!state.newH); $('f-type-wrap').classList.toggle('on', !!state.jtype);
+  }
+
+  function render() {
+    renderSeg();
+    renderNear();
+    const b = base();
+    renderCats(b.filter(inCos));
+    const byCat = b.filter(inCats);
+    renderBars(renderCompanies(byCat));
+    renderRows(byCat.filter(inCos));
+    renderTiles();
+    if (typeof renderFeedback === 'function') renderFeedback();
+    if (CV) renderResumeBar();   // strong-match count follows the group / fit filters
+    $('clear-all').hidden = !(state.near || state.group || state.fit !== 'possible' || state.cats.size || state.cos.size || state.q || state.newH || state.jtype || state.fUS || state.fClosed || state.onlyClosed);
+    persist();
+  }
+
+  // events
+  $('co-list').addEventListener('change', (e) => {
+    if (e.target.type !== 'checkbox') return;
+    e.target.checked ? state.cos.add(e.target.value) : state.cos.delete(e.target.value);
+    render();
+  });
+  $('seg').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-group]'); if (!b) return;
+    state.group = b.dataset.group;
+    // drop picked companies that aren't in the new group
+    if (state.group) [...state.cos].forEach((c) => { if (groupOf[c] !== state.group) state.cos.delete(c); });
+    render();
+  });
+  // "Near" events
+  $('near-q').addEventListener('input', (e) => { sugg = suggest(e.target.value); hl = sugg.length ? 0 : -1; showSugg(); });
+  $('near-q').addEventListener('focus', (e) => { if (state.near) e.target.select(); });
+  $('near-q').addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' && sugg.length) { hl = (hl + 1) % sugg.length; showSugg(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp' && sugg.length) { hl = (hl - 1 + sugg.length) % sugg.length; showSugg(); e.preventDefault(); }
+    else if (e.key === 'Enter') { if (sugg[hl]) pickPlace(sugg[hl]); e.preventDefault(); }
+    else if (e.key === 'Escape') { sugg = []; showSugg(); if (state.near) e.target.value = placeLabel(state.near); }
+  });
+  $('near-q').addEventListener('blur', () => setTimeout(() => {
+    sugg = []; showSugg();
+    $('near-q').value = state.near ? placeLabel(state.near) : '';
+  }, 150));
+  $('near-sugg').addEventListener('mousedown', (e) => { const b = e.target.closest('button[data-i]'); if (b) { e.preventDefault(); pickPlace(sugg[Number(b.dataset.i)]); } });
+  $('near-clear').addEventListener('click', () => {
+    state.near = null; $('near-q').value = '';
+    if (state.sort === 'location') { state.sort = 'date'; state.dir = -1; }
+    render();
+  });
+  $('radius').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-r]'); if (!b) return;
+    state.radius = Number(b.dataset.r);
+    if (!state.near) { $('near-q').focus(); toast('Type a city first, then pick a distance.'); }
+    render();
+  });
+  $('near-remote').addEventListener('change', (e) => { state.nearRemote = e.target.checked; render(); });
+
+  $('fitseg').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-fit]'); if (!b) return;
+    state.fit = b.dataset.fit; render();
+  });
+  $('co-list').addEventListener('click', (e) => {
+    const b = e.target.closest('.dd-group button'); if (!b) return;
+    e.preventDefault();
+    const members = D.companies.filter((c) => (c.group || 'natsec') === b.dataset.group).map((c) => c.name);
+    const allOn = members.every((m) => state.cos.has(m));
+    members.forEach((m) => allOn ? state.cos.delete(m) : state.cos.add(m));
+    render();
+  });
+  $('co-dd').querySelector('.dd-actions').addEventListener('click', (e) => {
+    const act = e.target.dataset.act; if (!act) return;
+    state.cos.clear();
+    if (act === 'all') D.companies.forEach((c) => state.cos.add(c.name));
+    render();
+  });
+  document.addEventListener('click', (e) => { if (!$('co-dd').contains(e.target)) $('co-dd').open = false; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('co-dd').open = false; });
+  $('clear-all').addEventListener('click', () => {
+    state.cats.clear(); state.cos.clear(); state.q = ''; state.group = ''; state.fit = 'possible';
+    state.newH = 0; state.jtype = '';
+    state.fUS = state.fClosed = state.onlyClosed = false;
+    state.near = null; state.nearRemote = false; $('near-remote').checked = false;
+    ['f-us', 'f-closed'].forEach((id) => { $(id).checked = false; });
+    render();
+  });
+  [['f-us', 'fUS'], ['f-closed', 'fClosed']].forEach(([id, k]) =>
+    $(id).addEventListener('change', (e) => { state[k] = e.target.checked; state.onlyClosed = false; render(); }));
+  $('f-new').addEventListener('change', (e) => { state.newH = Number(e.target.value) || 0; state.onlyClosed = false; render(); });
+  $('f-type').addEventListener('change', (e) => { state.jtype = e.target.value; state.onlyClosed = false; render(); });
+  $('cats').addEventListener('click', (e) => {
+    const b = e.target.closest('.cat'); if (!b) return;
+    if (!b.dataset.cat) state.cats.clear(); else toggle(state.cats, b.dataset.cat);
+    if (state.cats.size === D.categories.length) state.cats.clear();   // all picked = no filter
+    render();
+  });
+  $('bars').addEventListener('click', (e) => {
+    const r = e.target.closest('.bar-row'); if (!r) return;
+    toggle(state.cos, r.dataset.co); render();
+  });
+  document.querySelectorAll('th').forEach((th) => th.addEventListener('click', () => {
+    if (state.sort === th.dataset.sort) state.dir = -state.dir; else { state.sort = th.dataset.sort; state.dir = (th.dataset.sort === 'date' || th.dataset.sort === 'fit') ? -1 : 1; }
+    render();
+  }));
+  document.querySelectorAll('.tile').forEach((t) => t.addEventListener('click', () => {
+    const p = t.dataset.preset;
+    state.newH = p === 'new' ? 168 : 0; state.jtype = p === 'intern' ? 'intern' : ''; state.onlyClosed = p === 'closed'; state.fClosed = false;
+    $('f-closed').checked = false;
+    render();
+  }));
+  const tip = $('tip');
+  $('bars').addEventListener('mousemove', (e) => {
+    const r = e.target.closest('.bar-row');
+    if (!r) { tip.style.display = 'none'; return; }
+    tip.textContent = r.dataset.tip; tip.style.display = 'block';
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 270) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+  });
+  $('bars').addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+  $('rows').addEventListener('mousemove', (e) => {
+    const p = e.target.closest('.fitpill');
+    if (!p) { tip.style.display = 'none'; return; }
+    tip.textContent = p.dataset.tip; tip.style.display = 'block';
+    tip.style.left = Math.min(e.clientX + 14, innerWidth - 290) + 'px'; tip.style.top = (e.clientY + 14) + 'px';
+  });
+  $('rows').addEventListener('mouseleave', () => { tip.style.display = 'none'; });
+
+  // ----- 👍 / 👎 -----
+  const byKey = Object.fromEntries(D.jobs.filter((j) => j.key).map((j) => [j.key, j]));
+  let toastTimer = null, undoFn = null;
+  function toast(msg, undo) {
+    $('toast-msg').textContent = msg; undoFn = undo;
+    $('toast-undo').hidden = !undo;
+    $('toast').classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').classList.remove('show'), 5000);
+  }
+  $('toast-undo').addEventListener('click', () => { if (undoFn) undoFn(); $('toast').classList.remove('show'); });
+
+  function setVote(key, v) {
+    const j = byKey[key]; if (!j) return;
+    const before = votes[key] ? { ...votes[key] } : null;
+    if (v === 0) delete votes[key];
+    else votes[key] = { v, t: j.title, c: j.company, at: new Date().toISOString().slice(0, 10) };
+    saveVotes(); render();
+    return () => { if (before) votes[key] = before; else delete votes[key]; saveVotes(); render(); };
+  }
+  $('rows').addEventListener('click', (e) => {
+    const b = e.target.closest('.vote'); if (!b) return;
+    const key = b.dataset.key, v = Number(b.dataset.v), j = byKey[key];
+    const next = voteOf(j) === v ? 0 : v;                       // clicking the same thumb again clears it
+    const undo = setVote(key, next);
+    if (next < 0 && state.fit !== 'all') toast(`Hidden “${j.title}”. Voted not a fit.`, undo);
+    else if (next > 0) toast(`Marked “${j.title}” as a strong fit.`, undo);
+    else toast('Vote removed.', undo);
+  });
+
+  function renderFeedback() {
+    const all = Object.values(votes);
+    const up = all.filter((x) => x.v > 0).length, down = all.filter((x) => x.v < 0).length;
+    const merged = D.jobs.filter((j) => j.vote && !(j.key in votes)).length;
+    $('fb-counts').innerHTML = `<span>👍 <b>${up}</b></span><span>👎 <b>${down}</b></span>` +
+      (merged ? `<span title="Votes already merged in from exported files">+${merged} from shared files</span>` : '');
+    $('fb-export').disabled = $('fb-clear').disabled = !all.length;
+  }
+  $('fb-export').addEventListener('click', () => {
+    const payload = { version: 1, exported: new Date().toISOString(), votes };
+    const blob = new Blob([JSON.stringify(payload, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `natsec-job-feedback-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast(HOSTED ? 'Exported. Send the file to the tracker’s owner so everyone’s view learns from your votes.' : 'Exported. Save the file in the tracker’s “feedback” folder.');
+  });
+  $('fb-clear').addEventListener('click', () => {
+    const n = Object.keys(votes).length; if (!n) return;
+    if (!confirm(`Clear your ${n} vote${n === 1 ? '' : 's'} from this browser? (Votes already exported to the feedback folder are kept.)`)) return;
+    const saved = votes; votes = {}; saveVotes(); render();
+    toast(`Cleared ${n} vote${n === 1 ? '' : 's'}.`, () => { votes = saved; saveVotes(); render(); });
+  });
+
+  // =====================================================================
+  // Plain-English "Ask": turns a sentence into the dashboard's filters.
+  // No AI and no internet: it looks for company names, groups, places,
+  // distances, role types, internships, "new", and MBA fit, and uses any
+  // leftover words as a keyword search.
+  // =====================================================================
+  const norm = (s) => ' ' + s.toLowerCase().replace(/[’']/g, "'").replace(/[^a-z0-9&'$+ ]/g, ' ').replace(/\s+/g, ' ').trim() + ' ';
+
+  // companies: full name, name without "(…)", distinctive first word, plus common nicknames
+  const NICK = { 'rtx': 'RTX', 'raytheon': 'RTX', 'gd': 'General Dynamics', 'gdit': 'General Dynamics', 'electric boat': 'General Dynamics',
+    'hii': 'Huntington Ingalls (HII)', 'huntington': 'Huntington Ingalls (HII)', 'newport news': 'Huntington Ingalls (HII)',
+    'bah': 'Booz Allen Hamilton', 'booz': 'Booz Allen Hamilton', 'booz allen': 'Booz Allen Hamilton', 'l3': 'L3Harris', 'l3 harris': 'L3Harris', 'lm': 'Lockheed Martin', 'lockheed': 'Lockheed Martin',
+    'northrop': 'Northrop Grumman', 'ngc': 'Northrop Grumman', 'airbus': 'Airbus U.S. (Defense)', 'boeing': 'Boeing (Defense)', 'scale': 'Scale AI',
+    'shield': 'Shield AI', 'xbow': 'X-Bow Systems', 'x bow': 'X-Bow Systems', 'applied': 'Applied Intuition', 'varda': 'Varda Space', 'stoke': 'Stoke Space',
+    'impulse': 'Impulse Space', 'axiom': 'Axiom Space', 'sierra': 'Sierra Space', 'blue origin': 'Blue Origin', 'true anomaly': 'True Anomaly',
+    'psi quantum': 'PsiQuantum', 'cesium': 'CesiumAstro', 'leidos': 'Leidos', 'caci': 'CACI', 'palantir': 'Palantir', 'pltr': 'Palantir',
+    // NatSec100 ranks 31-100
+    'chaos': 'CHAOS Industries', 'relativity': 'Relativity Space', 'k2': 'K2 Space', 'ursa': 'Ursa Major', 'xona': 'Xona Space Systems',
+    'tomorrow io': 'Tomorrow.io', 'tomorrow': 'Tomorrow.io', 'boom': 'Boom Supersonic', 'turion': 'Turion Space', 'slingshot': 'Slingshot Aerospace',
+    'electra': 'Electra.aero', 'rebuild': 'Re:Build Manufacturing', 're build': 'Re:Build Manufacturing', 'starfish': 'Starfish Space', 'trm': 'TRM Labs',
+    'grafana': 'Grafana Labs', 'machina': 'Machina Labs', 'loft': 'Loft Orbital', 'loft federal': 'Loft Orbital', 'noda': 'NODA AI', 'vannevar': 'Vannevar Labs',
+    'compound eye': 'Compound Eye', 'atom': 'Atom Computing', 'reliable': 'Reliable Robotics', 'leo labs': 'LeoLabs', 'zeno': 'Zeno Power',
+    'overland': 'Overland AI', 'horizon3': 'Horizon3.ai', 'horizon 3': 'Horizon3.ai', 'agility': 'Agility Robotics', 'flock': 'Flock Safety',
+    'lunar outpost': 'Lunar Outpost', 'red6': 'Red 6', 'viken': 'Viken Detection', 'strider': 'Strider Technologies', 'havoc': 'Havoc AI',
+    'defense unicorns': 'Defense Unicorns', 'vulcan': 'Vulcan Elements', 'code metal': 'Code Metal', 'altana': 'Altana' };
+  const CO_ALIASES = [];
+  for (const c of D.companies) {
+    const full = norm(c.name).trim(), bare = norm(c.name.replace(/\(.*?\)/g, '')).trim();
+    [full, bare].forEach((a) => a && CO_ALIASES.push([a, c.name]));
+  }
+  for (const [a, n] of Object.entries(NICK)) if (D.companies.some((c) => c.name === n)) CO_ALIASES.push([a, n]);
+  CO_ALIASES.sort((x, y) => y[0].length - x[0].length);       // longest match first
+
+  const GROUP_WORDS = [['natsec', ['natsec100', 'natsec 100', 'nat sec 100', 'top 30', 'startups', 'startup', 'venture backed', 'vc backed', 'new defense']],
+                       ['prime', ['primes', 'prime contractors', 'defense primes', 'legacy primes', 'big primes', 'prime']],
+                       ['other', ['other defense tech']]];
+
+  const CAT_WORDS = [
+    ['Finance & Accounting', ['finance', 'financial', 'fp&a', 'fp a', 'accounting', 'accountant', 'treasury', 'controller', 'tax', 'audit', 'investor relations', 'corp dev', 'corporate development']],
+    ['Business Development & Sales', ['business development', 'bd', 'sales', 'capture', 'growth', 'partnerships', 'account executive', 'go to market', 'gtm', 'customer success']],
+    ['Strategy & Operations', ['strategy', 'strategic', 'operations', 'ops', 'bizops', 'business operations', 'chief of staff', 'deployment strategist']],
+    ['Program Management & Contracts', ['program management', 'program manager', 'project management', 'project manager', 'pm', 'pmo', 'contracts', 'contract', 'subcontracts', 'pricing', 'proposal', 'proposals']],
+    ['Policy & Government Affairs', ['policy', 'government relations', 'gov relations', 'government affairs', 'gov affairs', 'public affairs', 'legislative', 'lobbying', 'public sector']],
+    ['Marketing & Communications', ['marketing', 'communications', 'comms', 'pr', 'public relations', 'brand', 'content', 'events']],
+    ['People & Recruiting', ['hr', 'human resources', 'people', 'recruiting', 'recruiter', 'talent']],
+    ['Legal & Compliance', ['legal', 'compliance', 'counsel', 'lawyer', 'attorney', 'export control', 'trade compliance']],
+    ['Supply Chain & Procurement', ['supply chain', 'procurement', 'sourcing', 'purchasing', 'logistics', 'buyer']],
+    ['Security & Facilities', ['security', 'facilities', 'facility']],
+    ['Product Management', ['product management', 'product manager', 'product']]];
+
+  // place nicknames -> [name, state, radius]
+  const PLACE_NICK = { 'dc': ['Washington', 'DC'], 'd c': ['Washington', 'DC'], 'washington dc': ['Washington', 'DC'], 'dmv': ['Washington', 'DC'],
+    'nova': ['Arlington', 'VA'], 'northern virginia': ['Arlington', 'VA'], 'national capital region': ['Washington', 'DC'],
+    'bay area': ['San Francisco', 'CA', 50], 'silicon valley': ['San Jose', 'CA'], 'sf': ['San Francisco', 'CA'], 'nyc': ['New York', 'NY'],
+    'new york city': ['New York', 'NY'], 'la': ['Los Angeles', 'CA'], 'socal': ['Los Angeles', 'CA', 50], 'southern california': ['Los Angeles', 'CA', 50],
+    'philly': ['Philadelphia', 'PA'], 'vegas': ['Las Vegas', 'NV'], 'space coast': ['Cape Canaveral', 'FL', 50], 'boston area': ['Boston', 'MA'],
+    'research triangle': ['Raleigh', 'NC'], 'colorado springs': ['Colorado Springs', 'CO'], 'hampton roads': ['Norfolk', 'VA', 50],
+    // names shared by several US cities: default to the defense-industry one (type a state to override, e.g. "Arlington TX")
+    'arlington': ['Arlington', 'VA'], 'columbia': ['Columbia', 'MD'], 'springfield': ['Springfield', 'VA'], 'alexandria': ['Alexandria', 'VA'],
+    'fairfax': ['Fairfax', 'VA'], 'herndon': ['Herndon', 'VA'], 'chantilly': ['Chantilly', 'VA'], 'laurel': ['Laurel', 'MD'],
+    'bethesda': ['Bethesda', 'MD'], 'portland': ['Portland', 'OR'], 'aurora': ['Aurora', 'CO'], 'kent': ['Kent', 'WA'], 'cambridge': ['Cambridge', 'MA'] };
+  const ST_NAMES = { alabama: 'AL', alaska: 'AK', arizona: 'AZ', arkansas: 'AR', california: 'CA', colorado: 'CO', connecticut: 'CT', delaware: 'DE', florida: 'FL',
+    georgia: 'GA', hawaii: 'HI', idaho: 'ID', illinois: 'IL', indiana: 'IN', iowa: 'IA', kansas: 'KS', kentucky: 'KY', louisiana: 'LA', maine: 'ME', maryland: 'MD',
+    massachusetts: 'MA', michigan: 'MI', minnesota: 'MN', mississippi: 'MS', missouri: 'MO', montana: 'MT', nebraska: 'NE', nevada: 'NV', 'new hampshire': 'NH',
+    'new jersey': 'NJ', 'new mexico': 'NM', 'new york': 'NY', 'north carolina': 'NC', 'north dakota': 'ND', ohio: 'OH', oklahoma: 'OK', oregon: 'OR', pennsylvania: 'PA',
+    'rhode island': 'RI', 'south carolina': 'SC', 'south dakota': 'SD', tennessee: 'TN', texas: 'TX', utah: 'UT', vermont: 'VT', virginia: 'VA', washington: 'WA',
+    'west virginia': 'WV', wisconsin: 'WI', wyoming: 'WY' };
+  const ST_CODES = new Set(Object.values(ST_NAMES).concat(['DC']));
+  const pnorm = (s) => s.toLowerCase().replace(/\./g, '').replace(/^saint /, 'st ').replace(/^ft /, 'fort ').replace(/\s+/g, ' ').trim();
+  const placeByKey = new Map(); const placeByName = new Map();
+  for (const p of PL) {
+    const n = pnorm(p.name);
+    placeByKey.set(n + '|' + p.st, p);
+    const prev = placeByName.get(n); if (!prev || prev.area < p.area) placeByName.set(n, p);
+  }
+  // "austin" / "huntsville al" / "huntsville alabama" / "dc" -> place
+  function lookupPlace(words) {
+    const s = words.join(' ').trim();
+    if (!s) return null;
+    if (PLACE_NICK[s]) { const [n, st, r] = PLACE_NICK[s]; const p = placeByKey.get(pnorm(n) + '|' + st); return p ? { p, r } : null; }
+    const w = words.slice();
+    // trailing state ("al" / "alabama" / "new mexico")
+    for (let k = Math.min(2, w.length - 1); k >= 1; k--) {
+      const tail = w.slice(-k).join(' '), st = ST_NAMES[tail] || (k === 1 && ST_CODES.has(tail.toUpperCase()) ? tail.toUpperCase() : null);
+      if (st) { const p = placeByKey.get(pnorm(w.slice(0, -k).join(' ')) + '|' + st); if (p) return { p }; }
+    }
+    const p = placeByName.get(pnorm(s));
+    return p && (p.area >= 40 || [...placeByKey.keys()].filter((k) => k.startsWith(pnorm(s) + '|')).length === 1) ? { p } : null;
+  }
+  const RADII = [10, 25, 50, 100];
+  const snapRadius = (n) => RADII.reduce((best, r) => Math.abs(r - n) < Math.abs(best - n) ? r : best, 25);
+  const STOP = new Set(('please pull up show me find get give list display see view look looking search for any all every the a an of at in on to from with ' +
+    'jobs job roles role positions position openings opening opportunities opportunity listings posts postings work working companies company ' +
+    'i im i\'m want would like can you could there are is what which that who some around near nearby area region close by within miles mile mi ' +
+    'and or also only just based located location locations office offices hiring open currently right now mba mbas for my me us our good great').split(' '));
+
+  function parseAsk(text) {
+    let t = norm(text);
+    const used = [];            // what we understood, for the summary line
+    const notes = [];
+    const take = (phrase) => { t = t.replace(phrase, ' '); };   // remove understood words
+    const res = { cos: new Set(), cats: new Set(), group: '', near: null, radius: null, remote: false, jtype: '', newH: 0, fit: null, us: false, q: '' };
+
+    // pay isn't filterable yet; say so instead of guessing
+    if (/\$\s?\d|\b\d{2,3}k\b|\bsalary\b|\bpay(ing)?\b|\bcomp(ensation)?\b/.test(t)) {
+      notes.push('Pay filters aren\'t supported yet. Every role shown already pays at least $100k / $45 an hour where pay is posted.');
+      t = t.replace(/(paying|pay|salary|compensation|comp)\s*(over|above|at least|more than|>)?\s*\$?\s?\d[\d,]*k?/g, ' ').replace(/\$\s?\d[\d,]*k?/g, ' ').replace(/\b\d{2,3}k\b/g, ' ');
+    }
+    // clearances aren't tracked; don't mistake "security clearance" for the Security role type
+    if (/ (security clearance|clearance|clearances|ts sci|top secret|secret|polygraph|poly) /.test(t)) {
+      notes.push('Clearance filters aren\'t supported yet. Check each posting for clearance requirements.');
+      t = t.replace(/ (with |requiring |needs? )?(an? )?(active )?(security clearance|clearance|clearances|ts sci( with poly)?|top secret|secret|polygraph|poly) /g, ' ');
+    }
+    // MBA fit
+    if (/ (strong fit|best fit|top fit|best matches|strongest|top matches|great fit) /.test(t)) { res.fit = 'strong'; take(/ (strong|best|top|great) fit | best matches | strongest | top matches /g); }
+    else if (/ (all roles|any fit|everything|show everything|including low fit) /.test(t)) { res.fit = 'all'; take(/ all roles | any fit | everything | show everything | including low fit /g); }
+    // internships / remote / US (the "new this week" check runs after places, so "New York" stays a place)
+    // job type: "full and part time", "no internships", "part time", "full time", internships
+    if (/ (full time (and|or|&) part time|part time (and|or|&) full time|no internships?|not internships?|without internships?|excluding internships?|non intern(ship)?s?) /.test(t)) {
+      res.jtype = 'jobs'; take(/ full time (and|or|&) part time | part time (and|or|&) full time | (no|not|without|excluding) internships? | non intern(ship)?s? /g);
+    }
+    if (!res.jtype && / part time /.test(t)) { res.jtype = 'part'; take(/ part time /g); }
+    if (!res.jtype && / (full time|fulltime) /.test(t)) { res.jtype = 'full'; take(/ (full time|fulltime) /g); }
+    if (!res.jtype && / (intern|interns|internship|internships|co op|coop|summer associate|summer role|summer roles|summer) /.test(t)) { res.jtype = 'intern'; take(/ (summer )?(intern|interns|internship|internships|co op|coop|associate|role|roles) | summer /g); }
+    if (/ remote /.test(t)) { res.remote = true; take(/ (fully |work from home )?remote /g); }
+    if (/ (in the us|in the united states|us only|u s only|united states only|domestic) /.test(t)) { res.us = true; take(/ in the us | in the united states | us only | u s only | united states only | domestic /g); }
+
+    // place nicknames first ("bay area", "dc area", "nova"), so "bay" never becomes Bay, AR
+    const ST_ALT = Object.keys(ST_NAMES).concat([...ST_CODES].map((c) => c.toLowerCase())).sort((a, b) => b.length - a.length).join('|');
+    for (const [nick, [n, st, r]] of Object.entries(PLACE_NICK).sort((a, b) => b[0].length - a[0].length)) {
+      const re = new RegExp(' (?:(?:in|near|around|by|close to|outside of|outside) )?(?:the )?' + nick + '(?: area| region| metro)?(?: (' + ST_ALT + '))? ');
+      const mm = t.match(re);
+      if (mm) {
+        // "Arlington TX" names a different Arlington: let the regular place lookup handle it
+        if (mm[1] && (ST_NAMES[mm[1]] || mm[1].toUpperCase()) !== st) continue;
+        const p = placeByKey.get(pnorm(n) + '|' + st);
+        if (p) {
+          const w = t.match(/ within (\d{1,3}) ?(?:mi|miles?)? (?:of|from) /) || t.match(/ (\d{1,3}) ?(?:mi|miles?) (?:of|from|around|near) /);
+          res.near = p; res.radius = w ? snapRadius(Number(w[1])) : (r || 25);
+          t = t.replace(re, ' '); if (w) t = t.replace(w[0], ' ');
+          break;
+        }
+      }
+    }
+
+    // distance + place: "within 50 miles of huntsville al", "near austin", "in the dc area", "around boston"
+    let m = t.match(/ within (\d{1,3}) ?(?:mi|miles?)? (?:of|from) ([a-z' ]+?)(?= (?:for|with|at|that|who|posted|paying|in the|and|or)\b| $)/) ||
+            t.match(/ (\d{1,3}) ?(?:mi|miles?) (?:of|from|around|near) ([a-z' ]+?)(?= (?:for|with|at|that|who|posted|paying|in the|and|or)\b| $)/);
+    // try the longest run of words that names a real place ("costa mesa", "huntsville al", "dc")
+    const findPlaceIn = (placeText) => {
+      const words = placeText.trim().split(' ').filter((w) => w && w !== 'the');
+      for (let start = 0; start < words.length; start++)
+        for (let end = Math.min(words.length, start + 4); end > start; end--) {
+          const cand = words.slice(start, end);
+          if (cand.length === 1 && (STOP.has(cand[0]) || CAT_WORDS.some(([, ws]) => ws.includes(cand[0])))) continue;
+          const h = lookupPlace(cand);
+          if (h) return h;
+        }
+      return null;
+    };
+    let candidates = (m && !res.near) ? [{ m, radius: Number(m[1]), text: m[2] }] : [];
+    // "near austin", "in the dc area", "around boston"; check every one until a real place turns up
+    if (!res.near) for (const m2 of t.matchAll(/ (?:near|around|close to|by|in|outside|outside of) (?:the )?([a-z' ]+?)(?: area| region| metro)?(?= (?:for|with|at|that|who|posted|paying|and|or|in|near)\b| $)/g))
+      candidates.push({ m: m2, radius: null, text: m2[1] });
+    for (const c of candidates) {
+      const hit = findPlaceIn(c.text);
+      if (hit) { res.near = hit.p; res.radius = c.radius ? snapRadius(c.radius) : (hit.r || 25); t = t.replace(c.m[0], ' '); break; }
+    }
+    // how new: 24 hours ("today", "last 24 hours"), 72 hours ("last 3 days"), or this week ("new", "recent")
+    const NEW_24 = / (in the |from the |within the )?(last|past) (24 hours|24 hrs|day|1 day|one day)| today| since yesterday/;
+    const NEW_72 = / (in the |from the |within the )?(last|past) (72 hours|72 hrs|3 days|three days|few days|couple (of )?days)/;
+    if (NEW_24.test(t)) { res.newH = 24; take(new RegExp(NEW_24.source, 'g')); }
+    else if (NEW_72.test(t)) { res.newH = 72; take(new RegExp(NEW_72.source, 'g')); }
+    if (!res.newH && / (new|newest|latest|recent|recently posted|just posted|this week|past week|last week|last 7 days) /.test(t)) res.newH = 168;
+    if (res.newH) take(/ (newest|latest|recent|recently posted|just posted|this week|past week|last week|last 7 days|new|posted|roles posted|jobs posted) /g);
+
+    // a specific job title ("chief of staff", "program manager") also searches titles, not just the whole category
+    const TITLE_PHRASES = ['chief of staff', 'deployment strategist', 'program manager', 'product manager', 'project manager', 'capture manager',
+      'account executive', 'financial analyst', 'business development manager', 'contracts manager', 'recruiter', 'controller', 'investor relations', 'fp&a'];
+    const titleHit = TITLE_PHRASES.find((p) => t.includes(' ' + p + ' '));
+
+    // companies and groups
+    for (const [alias, name] of CO_ALIASES) {
+      const re = new RegExp(' ' + alias.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + "('s)? ");
+      if (re.test(t)) { res.cos.add(name); t = t.replace(re, ' '); }
+    }
+    for (const [g, words] of GROUP_WORDS) for (const w of words) if (t.includes(' ' + w + ' ')) { res.group = g; take(new RegExp(' (the )?' + w + ' ', 'g')); }
+
+    // role categories (longest phrases first)
+    const catPairs = CAT_WORDS.flatMap(([cat, ws]) => ws.map((w) => [w, cat])).sort((a, b) => b[0].length - a[0].length);
+    for (const [w, cat] of catPairs) {
+      const re = new RegExp(' ' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ' ');
+      if (re.test(t) && D.categories.includes(cat)) { res.cats.add(cat); t = t.replace(re, ' '); }
+    }
+
+    // leftovers -> keyword search
+    const left = t.trim().split(' ').filter((w) => w && !STOP.has(w) && !/^\d+$/.test(w));
+    res.q = titleHit || left.join(' ');
+    return { res, notes };
+  }
+
+  function applyAsk(text) {
+    const { res, notes } = parseAsk(text);
+    // a new question starts from a clean slate (keeps your MBA-fit choice unless the question sets it)
+    state.cats = res.cats; state.cos = res.cos; state.group = res.group;
+    state.near = res.near ? { name: res.near.name, st: res.near.st, lat: res.near.lat, lon: res.near.lon } : null;
+    if (res.radius) state.radius = res.radius;
+    state.nearRemote = !!(res.remote && res.near);
+    state.jtype = res.jtype; state.newH = res.newH; state.fUS = res.us; state.fClosed = false; state.onlyClosed = false;
+    state.fit = res.fit || 'possible';     // each question starts from the default (Strong + possible) unless it says otherwise
+    state.q = res.q || (res.remote && !res.near ? 'remote' : '');
+    $('f-us').checked = state.fUS;
+    $('f-closed').checked = false;
+    if (state.near) { state.sort = 'location'; state.dir = 1; } else if (state.sort === 'location') { state.sort = 'date'; state.dir = -1; }
+    render();
+
+    // summary of how the question was read
+    const tags = [];
+    if (res.cos.size) tags.push(['Company', [...res.cos].join(', ')]);
+    if (res.group) tags.push(['Group', (GROUPS.find((g) => g.id === res.group) || {}).name || res.group]);
+    if (res.cats.size) tags.push(['Role type', [...res.cats].join(', ')]);
+    if (state.near) tags.push(['Near', `${state.near.name}, ${state.near.st} (${state.radius} mi)${state.nearRemote ? ' + remote' : ''}`]);
+    else if (res.remote) tags.push(['Location', 'Remote']);
+    if (res.jtype) tags.push(['Type', { jobs: 'Full- & part-time', full: 'Full-time', part: 'Part-time', intern: 'Internships' }[res.jtype]]);
+    if (res.newH) tags.push(['New', { 24: 'Last 24 hours', 72: 'Last 72 hours', 168: 'This week' }[res.newH]]);
+    if (res.us) tags.push(['', 'US only']);
+    if (res.fit) tags.push(['MBA fit', res.fit === 'strong' ? 'Strong only' : 'All roles']);
+    if (res.q && state.q === res.q) tags.push(['Keywords', `“${res.q}”`]);
+    const n = document.querySelectorAll('#rows tr').length;
+    const box = $('ask-result');
+    box.innerHTML = (tags.length
+        ? `<span>Showing <b>${n.toLocaleString()}</b> role${n === 1 ? '' : 's'}:</span>` + tags.map(([k, v]) => `<span class="tag">${k ? `<b>${esc(k)}</b>` : ''}${esc(v)}</span>`).join('')
+        : `<span>I couldn't pick out a company, place or role type, so nothing was filtered. Try naming one, e.g. "finance roles at Lockheed near Denver".</span>`) +
+      `<button type="button" id="ask-clear">Clear</button>` +
+      notes.map((x) => `<span class="note">${esc(x)}</span>`).join('') +
+      (tags.length && !n ? `<span class="note">No current roles match all of that. Try a bigger distance, fewer role types, or “all roles”.</span>` : '');
+    box.hidden = false;
+    $('ask-clear').addEventListener('click', () => { $('clear-all').click(); $('ask-q').value = ''; box.hidden = true; });
+  }
+
+  // =====================================================================
+  // Find alumni: links that open LinkedIn's own search in a new tab.
+  // The dashboard never reads, stores or copies anyone's LinkedIn data;
+  // LinkedIn runs the search under the viewer's own account.
+  // =====================================================================
+  const SCHOOLS_KEY = 'natsec-tracker-schools';
+  const DEFAULT_SCHOOLS = [{ name: 'Georgetown University', url: '' }, { name: 'Georgetown McDonough', url: '' }];
+  let schools;
+  try { schools = JSON.parse(localStorage.getItem(SCHOOLS_KEY) || 'null'); } catch (e) { schools = null; }
+  if (!Array.isArray(schools)) schools = DEFAULT_SCHOOLS.map((s) => ({ ...s }));
+  const saveSchools = () => { try { localStorage.setItem(SCHOOLS_KEY, JSON.stringify(schools)); } catch (e) {} };
+  const schoolSlug = (url) => { const m = String(url || '').match(/linkedin\.com\/school\/([^/?#\s]+)/i); return m ? m[1] : null; };
+
+  // the name people use on LinkedIn for each company (and General Dynamics' units)
+  const CO_LINKEDIN = { 'Boeing (Defense)': 'Boeing', 'Airbus U.S. (Defense)': 'Airbus', 'Huntington Ingalls (HII)': 'HII', 'Varda Space': 'Varda Space Industries' };
+  function liCompany(j) {
+    if (j.company === 'General Dynamics') {
+      const u = (j.dept || '').split(' / ')[0];
+      return { 'GDIT': 'GDIT', 'Mission Systems': 'General Dynamics Mission Systems', 'Electric Boat': 'General Dynamics Electric Boat',
+               'OTS': 'General Dynamics OTS', 'Bath Iron Works': 'Bath Iron Works' }[u] || 'General Dynamics';
+    }
+    return CO_LINKEDIN[j.company] || j.company.replace(/\s*\(.*?\)\s*/g, ' ').trim();
+  }
+  // "Sr. Program Manager II - Space Systems (Hybrid)" -> "Program Manager"
+  function coreTitle(t) {
+    let s = String(t).split(/\s[-–—|:]\s|,|\(|\//)[0];
+    s = s.replace(/\b(senior|sr|staff|stf|principal|lead|junior|jr|associate|level\s*\d+|[elr]\d+|i{1,3}|iv|\d+)\b\.?/gi, ' ');
+    s = s.replace(/\s+/g, ' ').trim();
+    return s.length >= 3 ? s : String(t).split(/\s[-–—]\s/)[0].trim();
+  }
+  const peopleSearch = (q) => 'https://www.linkedin.com/search/results/people/?keywords=' + encodeURIComponent(q) + '&origin=GLOBAL_SEARCH_HEADER';
+  const alumniTool = (slug, q) => `https://www.linkedin.com/school/${encodeURIComponent(slug)}/people/` + (q ? '?keywords=' + encodeURIComponent(q) : '');
+
+  function menuLink(href, text, sub) {
+    return `<a role="menuitem" href="${esc(href)}" target="_blank" rel="noopener noreferrer"><span class="ico">in</span><span>${esc(text)}${sub ? `<small>${esc(sub)}</small>` : ''}</span></a>`;
+  }
+  let menuFor = null;
+  function openAlumniMenu(btn) {
+    const j = byKey[btn.dataset.key]; if (!j) return;
+    const co = liCompany(j), title = coreTitle(j.title);
+    let html = '';
+    for (const s of schools) {
+      const slug = schoolSlug(s.url);
+      html += `<div class="hd">${esc(s.name)} alumni</div>`;
+      if (slug) {
+        html += menuLink(alumniTool(slug, co), `${s.name} alumni at ${co}`, 'LinkedIn alumni tool');
+        html += menuLink(alumniTool(slug, `${co} ${title}`), `…who work as ${title}`, 'LinkedIn alumni tool');
+      } else {
+        html += menuLink(peopleSearch(`${co} ${s.name}`), `${s.name} alumni at ${co}`, 'LinkedIn people search');
+        html += menuLink(peopleSearch(`${co} ${title} ${s.name}`), `…who work as ${title}`, 'LinkedIn people search');
+      }
+    }
+    html += `<div class="hd">Anyone at ${esc(co)}</div>` + menuLink(peopleSearch(`${co} ${title}`), `${title} at ${co}`, 'LinkedIn people search');
+    html += `<div class="ft">Opens LinkedIn in a new tab, using your own LinkedIn account. ${schools.length ? '' : 'Add your schools in the sidebar. '}<button type="button" id="alum-edit">Edit my schools</button></div>`;
+    const m = $('alum-menu');
+    m.innerHTML = html; m.hidden = false;
+    const r = btn.getBoundingClientRect(), mh = m.offsetHeight, mw = m.offsetWidth;
+    m.style.left = Math.max(12, Math.min(r.left, innerWidth - mw - 12)) + 'px';
+    m.style.top = (r.bottom + 6 + mh > innerHeight - 8 ? Math.max(8, r.top - mh - 6) : r.bottom + 6) + 'px';
+    if (menuFor) menuFor.setAttribute('aria-expanded', 'false');
+    menuFor = btn; btn.setAttribute('aria-expanded', 'true');
+    $('alum-edit').addEventListener('click', () => { closeAlumniMenu(); $('school-name').scrollIntoView({ block: 'center' }); $('school-name').focus(); });
+  }
+  function closeAlumniMenu() {
+    $('alum-menu').hidden = true;
+    if (menuFor) { menuFor.setAttribute('aria-expanded', 'false'); menuFor = null; }
+  }
+  $('rows').addEventListener('click', (e) => {
+    const b = e.target.closest('.alum-btn:not(.cmp-btn)'); if (!b) return;
+    e.stopPropagation();
+    if (menuFor === b) closeAlumniMenu(); else openAlumniMenu(b);
+  });
+  document.addEventListener('click', (e) => { if (!$('alum-menu').hidden && !e.target.closest('#alum-menu') && !e.target.closest('.alum-btn:not(.cmp-btn)')) closeAlumniMenu(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAlumniMenu(); });
+  addEventListener('scroll', () => closeAlumniMenu(), { passive: true });
+  $('alum-menu').addEventListener('click', (e) => { if (e.target.closest('a')) setTimeout(closeAlumniMenu, 50); });
+
+  function renderSchools() {
+    $('school-list').innerHTML = schools.map((s, i) =>
+      `<li><span class="nm" title="${esc(s.name)}">${esc(s.name)}</span>${schoolSlug(s.url) ? '<span class="pill" title="Uses LinkedIn\'s alumni tool">ALUMNI TOOL</span>' : ''}<button type="button" data-i="${i}" aria-label="Remove ${esc(s.name)}" title="Remove">✕</button></li>`).join('') ||
+      '<li><span class="nm">No schools yet. Add one below.</span></li>';
+  }
+  $('school-list').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-i]'); if (!b) return;
+    const i = Number(b.dataset.i), removed = schools.splice(i, 1)[0];
+    saveSchools(); renderSchools();
+    toast(`Removed ${removed.name}.`, () => { schools.splice(i, 0, removed); saveSchools(); renderSchools(); });
+  });
+  $('school-add').addEventListener('submit', (e) => {
+    e.preventDefault();
+    let name = $('school-name').value.trim(); const url = $('school-url').value.trim();
+    if (url && !schoolSlug(url)) { toast('That address isn\'t a LinkedIn school page. It should look like linkedin.com/school/…'); return; }
+    if (!name && url) name = schoolSlug(url).replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    if (!name) { $('school-name').focus(); return; }
+    const existing = schools.find((s) => s.name.toLowerCase() === name.toLowerCase());
+    if (existing) { if (url) existing.url = url; } else schools.push({ name, url });
+    saveSchools(); renderSchools();
+    $('school-name').value = ''; $('school-url').value = '';
+    toast(existing ? `Updated ${name}.` : `Added ${name}. "Find alumni" now includes it.`);
+  });
+  renderSchools();
+
+  $('ask-form').addEventListener('submit', (e) => { e.preventDefault(); const v = $('ask-q').value.trim(); if (v) applyAsk(v); });
+  const EXAMPLES = ['Palantir jobs in the DC area', 'MBA internships near Austin', 'strategy roles at the primes', 'finance jobs within 50 miles of Huntsville, AL', 'new BD roles at startups'];
+  $('ask-examples').insertAdjacentHTML('beforeend', EXAMPLES.map((x) => `<button type="button">${esc(x)}</button>`).join(''));
+  $('ask-examples').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { $('ask-q').value = b.textContent; applyAsk(b.textContent); } });
+
+  // =====================================================================
+  // Resume matcher. Everything happens inside this browser: the resume is
+  // read here and is never uploaded or sent anywhere. Matching is rules-based
+  // (skills.json + each posting's qualifications, read by Quals.ps1), no AI.
+  // =====================================================================
+  const RS_KEY = 'natsec-tracker-resume';
+  let CV = null;                 // the reader's resume profile
+  let QI = null, SK = [], CATRX = [], EXRX = null;
+  const QUALS = {};              // job key -> [required bullets, preferred bullets]
+  window.QUALS_ADD = (o) => Object.assign(QUALS, o);
+  const loadedScripts = {};
+  const loadScript = (src) => loadedScripts[src] || (loadedScripts[src] = new Promise((ok, fail) => {
+    const s = document.createElement('script');
+    s.src = src; s.onload = () => ok(); s.onerror = () => { delete loadedScripts[src]; fail(new Error('Could not load ' + src)); };
+    document.head.appendChild(s);
+  }));
+  const slugOf = (name) => String(name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+  async function ensureIndex() {
+    if (QI) return QI;
+    await loadScript('data/quals-index.js');
+    const qi = window.QUALS_INDEX;
+    if (!qi) throw new Error('The qualifications file is missing. Run the tracker\'s update once.');
+    SK = qi.skills.map((s) => { try { return { n: s.n, c: s.c || [], k: s.k, rx: new RegExp('(?<![A-Za-z0-9])(?:' + s.re + ')(?![A-Za-z0-9])', 'i') }; } catch (e) { return { n: s.n, c: [], k: s.k, rx: /(?!)/ }; } });
+    CATRX = qi.cats.map((c) => { try { return { n: c.n, rx: new RegExp(c.re, 'i') }; } catch (e) { return { n: c.n, rx: /(?!)/ }; } });
+    try { EXRX = qi.exclude ? new RegExp(qi.exclude, 'i') : null; } catch (e) { EXRX = null; }
+    QI = qi;
+    return QI;
+  }
+  const skillIdsIn = (t) => { const ids = []; SK.forEach((s, i) => { if (s.rx.test(t)) ids.push(i); }); return ids; };
+  // per-line analysis doesn't depend on the resume, so it's worked out once per line (many postings share lines)
+  const skMemo = new Map(), ktMemo = new Map();
+  const skillsOfB = (b) => { let v = skMemo.get(b); if (!v) { v = skillIdsIn(b); skMemo.set(b, v); } return v; };
+  const termsOfB = (b) => { let v = ktMemo.get(b); if (!v) { v = keyTerms(b); ktMemo.set(b, v); } return v; };
+  const idList = (s) => (s ? String(s).split('.').map(Number).filter((i) => Number.isInteger(i) && i >= 0 && i < SK.length) : []);
+
+  // ---------- reading the file (PDF / Word / text) ----------
+  async function readResumeFile(file) {
+    const name = file.name || 'resume', ext = ((name.match(/\.([a-z0-9]+)$/i) || [])[1] || '').toLowerCase();
+    if (file.size > 10 * 1024 * 1024) throw new Error('That file is over 10 MB. Try a PDF or Word copy of just your resume.');
+    if (ext === 'pdf' || file.type === 'application/pdf') return pdfText(await file.arrayBuffer());
+    if (ext === 'docx') return docxText(await file.arrayBuffer());
+    if (['txt', 'md', 'text'].includes(ext) || (file.type || '').startsWith('text/')) return file.text();
+    if (ext === 'doc') throw new Error('Older Word files (.doc) can\'t be read here. In Word, choose File › Save As › PDF or Word Document (.docx), then try again.');
+    if (ext === 'pages') throw new Error('Pages files can\'t be read here. In Pages, choose File › Export To › PDF, then try again.');
+    throw new Error('Please use a PDF, Word (.docx) or text file, or paste your resume instead.');
+  }
+  async function pdfText(buf) {
+    // pdf.js (Mozilla, Apache-2.0) is bundled in lib/pdfjs; it runs on this page, nothing leaves the browser
+    await loadScript('lib/pdfjs/pdf.worker.classic.js'); await window.pdfjsWorkerReady;
+    await loadScript('lib/pdfjs/pdf.classic.js'); const lib = await window.pdfjsLibReady;
+    const doc = await lib.getDocument({ data: new Uint8Array(buf), isEvalSupported: false, disableFontFace: true, verbosity: 0 }).promise;
+    const out = [];
+    for (let p = 1; p <= Math.min(doc.numPages, 10); p++) {
+      const tc = await (await doc.getPage(p)).getTextContent();
+      let line = '', lastY = null, lastEnd = null;
+      for (const it of tc.items) {
+        if (typeof it.str !== 'string') continue;
+        const x = it.transform ? it.transform[4] : null, y = it.transform ? it.transform[5] : null;
+        if (lastY !== null && y !== null && Math.abs(y - lastY) > 2.5 && line.trim()) { out.push(line); line = ''; lastEnd = null; }
+        if (lastEnd !== null && x !== null && x - lastEnd > 1.5 && !/\s$/.test(line) && !/^\s/.test(it.str)) line += ' ';
+        line += it.str;
+        if (it.hasEOL) { out.push(line); line = ''; lastEnd = null; } else lastEnd = x !== null ? x + (it.width || 0) : null;
+        if (y !== null) lastY = y;
+      }
+      if (line.trim()) out.push(line);
+    }
+    try { await doc.destroy(); } catch (e) {}
+    return out.join('\n');
+  }
+  async function docxText(buf) {
+    // a .docx is a zip; read word/document.xml with the browser's own unzip (DecompressionStream)
+    const u8 = new Uint8Array(buf), dv = new DataView(buf);
+    let eocd = -1;
+    for (let i = u8.length - 22; i >= Math.max(0, u8.length - 70000); i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+    if (eocd < 0) throw new Error('This Word file looks damaged. Try saving it again, or as a PDF.');
+    const count = dv.getUint16(eocd + 10, true); let p = dv.getUint32(eocd + 16, true), entry = null;
+    for (let k = 0; k < count && p + 46 <= u8.length; k++) {
+      if (dv.getUint32(p, true) !== 0x02014b50) break;
+      const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nlen = dv.getUint16(p + 28, true), xlen = dv.getUint16(p + 30, true), clen = dv.getUint16(p + 32, true), off = dv.getUint32(p + 42, true);
+      if (new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nlen)) === 'word/document.xml') { entry = { method, csize, off }; break; }
+      p += 46 + nlen + xlen + clen;
+    }
+    if (!entry) throw new Error('Couldn\'t find the text inside this Word file.');
+    const start = entry.off + 30 + dv.getUint16(entry.off + 26, true) + dv.getUint16(entry.off + 28, true);
+    let data = u8.subarray(start, start + entry.csize);
+    if (entry.method === 8) {
+      if (typeof DecompressionStream === 'undefined') throw new Error('This browser can\'t open Word files. Save your resume as a PDF, or paste the text.');
+      data = new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    } else if (entry.method !== 0) throw new Error('This Word file uses a format the tracker can\'t read. Save it as a PDF instead.');
+    const xml = new DOMParser().parseFromString(new TextDecoder().decode(data), 'application/xml');
+    const W = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main', lines = [];
+    for (const para of xml.getElementsByTagNameNS(W, 'p')) {
+      let s = '';
+      const walk = (node) => { for (const c of node.childNodes) {
+        if (c.nodeType !== 1) continue;
+        if (c.namespaceURI === W && c.localName === 't') s += c.textContent;
+        else if (c.namespaceURI === W && c.localName === 'tab') s += '\t';
+        else if (c.namespaceURI === W && (c.localName === 'br' || c.localName === 'cr')) s += '\n';
+        else if (!(c.namespaceURI === W && c.localName === 'p')) walk(c);
+      } };
+      walk(para);
+      if (s.trim()) lines.push((para.getElementsByTagNameNS(W, 'numPr').length ? '• ' : '') + s);
+    }
+    return lines.join('\n');
+  }
+
+  // ---------- understanding the resume ----------
+  const NOW_M = new Date().getFullYear() * 12 + new Date().getMonth();
+  const MON = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, sept: 8, oct: 9, nov: 10, dec: 11 };
+  const D1 = '(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\\.?,?\\s*(?:19|20)\\d{2}|\\d{1,2}\\s*/\\s*(?:19|20)\\d{2}|(?:19|20)\\d{2})';
+  const RANGE_RX = new RegExp('(' + D1 + ')\\s*(?:-|–|—|to|until|through|thru)\\s*(' + D1 + '|present|current|now|today|ongoing)', 'gi');
+  function monthOf(s, isEnd) {
+    s = s.toLowerCase().trim();
+    if (/present|current|now|today|ongoing/.test(s)) return NOW_M;
+    let m = s.match(/^([a-z]+)\.?,?\s*(\d{4})/); if (m && MON[m[1].slice(0, 4)] !== undefined) return Number(m[2]) * 12 + MON[m[1].slice(0, 4)];
+    if (m && MON[m[1].slice(0, 3)] !== undefined) return Number(m[2]) * 12 + MON[m[1].slice(0, 3)];
+    m = s.match(/^(\d{1,2})\s*\/\s*(\d{4})/); if (m) return Number(m[2]) * 12 + Math.min(11, Math.max(0, Number(m[1]) - 1));
+    m = s.match(/^(\d{4})/); if (m) return Number(m[1]) * 12 + 6;   // year only: count from mid-year
+    return null;
+  }
+  function clearanceOf(t) {
+    let lvl = 0;
+    if (/\bTS\s*\/\s*SCI\b|\bTS[- ]SCI\b|top secret\s*\/\s*(SCI|sensitive)|top secret[- ]SCI|\bSCI eligib/i.test(t)) lvl = 3;
+    else if (/top secret|\bTS\b (security )?clearance|\bTS\b clearance/i.test(t)) lvl = 2;
+    else if (/\bsecret\b.{0,30}\bclearance|\bclearance\b.{0,30}\bsecret\b|\b(active|interim|current|DoD) secret\b/i.test(t)) lvl = 1;
+    return { lvl, poly: lvl > 0 && /polygraph|\bpoly\b|full[- ]scope/i.test(t) };
+  }
+  const CLR_NAME = ['None', 'Secret', 'Top Secret', 'TS/SCI'];
+  const EDU_NAME = ['Not found', 'Associate / high school', 'Bachelor\'s', 'Master\'s / MBA / JD'];
+  const STOPW = new Set(('a an the and or of in on at to for with from by as is are be been being this that these those you your our we will can may must should would ' +
+    'able ability abilities strong excellent proven demonstrated demonstrate experience experiences experienced years year yrs plus minimum least preferred required require requires requirement requirements ' +
+    'including include includes such other related relevant field fields degree degrees equivalent knowledge understanding familiarity familiar skills skill work working works environment environments ' +
+    'team teams level levels high highly well new across within using use used based both all any each more most etc also into who what which their them they its has have having does not but than then ' +
+    'over per role roles position job candidate candidates ideal ideally successful success time times day days professional professionally similar various multiple good great effective effectively ' +
+    'prior previous current currently someone people person comfortable ensure ensuring support supporting provide providing able need needs looking want help helping make making take taking ' +
+    'bachelor bachelors master masters mba accredited college university diploma graduate undergraduate discipline major ' +
+    'clearly complex information internal external wide range broad deep overall daily preference strongly very').split(' '));
+  // light word stemming so "plans / planned / planning" and "manage / managed / manager" line up
+  const stem = (w) => {
+    w = w.toLowerCase().replace(/[^a-z0-9+#&]/g, '');
+    if (w.length > 4) w = w.replace(/(ational|ations?|ings?|ments?|ions?|ers?|ies|ied|ed|es|ly|s)$/, '');
+    if (w.length > 4) w = w.replace(/e$/, '');
+    if (w.length > 3) w = w.replace(/([b-df-hj-np-tv-z])\1$/, '$1');
+    return w;
+  };
+  const wordsOf = (t) => (String(t).toLowerCase().match(/[a-z][a-z0-9+#&'’-]{2,}/g) || []).map((w) => w.replace(/['’]s$/, '').replace(/[-'’]+$/, ''));
+  function keyTerms(t) {
+    const out = [], seen = new Set();
+    for (const w of wordsOf(t)) { if (w.length < 4 || STOPW.has(w)) continue; const s = stem(w); if (!seen.has(s)) { seen.add(s); out.push([w, s]); } }
+    return out;
+  }
+
+  function buildProfile(text, name, edits) {
+    edits = edits || {};
+    text = String(text).replace(/\r/g, '').replace(/[   ]/g, ' ');
+    const lines = text.split('\n').map((l) => l.replace(/[ \t]+/g, ' ').trim()).filter(Boolean);
+    // which lines are in the Education section (their dates aren't work experience)
+    const HEAD = /^(education|academic|experience|professional experience|work experience|employment|career|leadership|military|skills|additional|activities|interests|certifications?|languages|projects|volunteer|honors|awards|summary|profile|publications|technical skills|core competencies)\b/i;
+    let sec = '';
+    const tagged = lines.map((l) => { if (l.length < 45 && HEAD.test(l)) sec = /^(education|academic)/i.test(l) ? 'edu' : 'other'; return { l, sec }; });
+    // years of experience = the union of date ranges outside Education
+    const spans = [];
+    for (const { l, sec: s } of tagged) {
+      if (s === 'edu') continue;
+      for (const m of l.matchAll(RANGE_RX)) {
+        const a = monthOf(m[1], false), b = monthOf(m[2], true);
+        if (a !== null && b !== null && b >= a && a >= 1975 * 12 && b <= NOW_M + 1) spans.push([a, b]);
+      }
+    }
+    spans.sort((x, y) => x[0] - y[0]);
+    let months = 0, cur = null;
+    for (const s of spans) { if (!cur || s[0] > cur[1]) { if (cur) months += cur[1] - cur[0]; cur = s.slice(); } else cur[1] = Math.max(cur[1], s[1]); }
+    if (cur) months += cur[1] - cur[0];
+    const yearsAuto = spans.length ? Math.round(months / 12 * 2) / 2 : null;
+    // education
+    const edu = /\bM\.?B\.?A\b|master of business|master'?s|\bmaster of\b|\bM\.?S\.? in\b|\bM\.?A\.? in\b|\bMPP\b|\bMPA\b|\bMSFS\b|\bJ\.?D\.?\b|juris doctor|ph\.?\s?d|doctorate/i.test(text) ? 3
+      : /bachelor|\bB\.?A\.?\b|\bB\.?S\.?\b|\bB\.?B\.?A\b|\bB\.?S\.?E\b|undergraduate|military academy|naval academy|air force academy|coast guard academy/i.test(text) ? 2
+      : /associate'?s? (degree|of)|high school|\bGED\b/i.test(text) ? 1 : 0;
+    const mba = /\bM\.?B\.?A\b|master of business administration/i.test(text);
+    const clr = clearanceOf(text);
+    // skills (plus the reader's own edits)
+    const auto = new Set(skillIdsIn(text));
+    const skills = new Set([...auto].filter((i) => !(edits.removed || []).includes(i)));
+    for (const i of edits.added || []) skills.add(i);
+    // strongest areas: job-title lines (heavily) + skills
+    const aff = {}; for (const c of D.categories) aff[c] = 0;
+    for (const { l, sec: s } of tagged) {
+      if (s === 'edu' || l.length > 80 || /^[•·▪●◦\-*]/.test(l) || /\.$/.test(l)) continue;
+      for (const c of CATRX) if (c.rx.test(l) && !(EXRX && EXRX.test(l))) { aff[c.n] = (aff[c.n] || 0) + 3; break; }
+    }
+    for (const i of skills) for (const c of SK[i].c) if (c in aff) aff[c] += 1;
+    const top = Math.max(1, ...Object.values(aff));
+    for (const c in aff) aff[c] = aff[c] / top;
+    const stems = new Set(wordsOf(text).map(stem));
+    const prof = {
+      name, text, words: (text.match(/\S+/g) || []).length, lines, tagged,
+      edu, mba, yearsAuto, years: edits.years != null ? edits.years : yearsAuto,
+      clrAuto: clr.lvl, clr: edits.clr != null ? edits.clr : clr.lvl, poly: edits.poly != null ? edits.poly : clr.poly,
+      auto, skills, aff, stems, edits
+    };
+    prof.review = reviewResume(prof);
+    return prof;
+  }
+
+  // a quick, rules-based "resume check"
+  function reviewResume(p) {
+    const out = [];
+    const bullets = p.tagged.filter(({ l, sec }) => /^[•·▪●◦\-*]/.test(l) || (sec !== 'edu' && l.length > 60 && /^[A-Z][a-z]+(ed|ing)?\b/.test(l)));
+    const withNum = bullets.filter(({ l }) => /\d|%|\$/.test(l.replace(/(19|20)\d{2}/g, ''))).length;
+    if (bullets.length >= 5) {
+      const share = withNum / bullets.length;
+      if (share >= 0.6) out.push(['good', `${withNum} of your ${bullets.length} bullet points show a number or result. Recruiters look for exactly that.`]);
+      else out.push(['tip', `Only ${withNum} of your ${bullets.length} bullet points include a number. Add results where you can: dollars, %, team size, time saved, contracts won.`]);
+    }
+    const weak = bullets.filter(({ l }) => /^[•·▪●◦\-*]?\s*(responsible for|duties included|helped|assisted|worked on|tasked with|involved in|participated in)/i.test(l)).length;
+    if (weak >= 2) out.push(['tip', `${weak} bullets start with phrases like "Responsible for" or "Helped". Lead with a strong verb instead (Led, Built, Negotiated, Grew).`]);
+    if (p.words > 900) out.push(['tip', `Your resume is about ${p.words.toLocaleString()} words, likely more than one page. Most MBA recruiting expects one page.`]);
+    else if (p.words >= 300) out.push(['good', `Length looks right for a one-page MBA resume (about ${p.words.toLocaleString()} words).`]);
+    if (!/[\w.+-]+@[\w-]+\.[\w.]+/.test(p.text)) out.push(['tip', 'Add an email address at the top.']);
+    if (!/linkedin\.com\/in\//i.test(p.text)) out.push(['tip', 'Add your LinkedIn profile address (linkedin.com/in/…). Defense-tech recruiters check it.']);
+    const defenseBg = [...p.skills].some((i) => SK[i].k === 'mil' || /DoD|Intelligence/.test(SK[i].n));
+    if (!p.clrAuto && defenseBg) out.push(['tip', 'Your background includes military or defense work but no security clearance is listed. If you hold or held one, list the level and whether it\'s active. Many of these roles require it.']);
+    else if (p.clrAuto) out.push(['good', `Clearance is listed (${CLR_NAME[p.clrAuto]}${p.poly ? ' with polygraph' : ''}). Many roles here ask for one.`]);
+    if (p.auto.size < 6) out.push(['tip', 'Few skills that these postings ask for were found. Name your tools and areas the way postings do, e.g. "FP&A", "capture management", "FAR/DFARS", "earned value", "Salesforce".']);
+    if (bullets.filter(({ l }) => /\b(I|my|me)\b/.test(l)).length >= 3) out.push(['tip', 'Drop "I" and "my" from bullet points.']);
+    if (!p.tagged.some(({ l }) => /^(education|academic)/i.test(l))) out.push(['tip', 'No "Education" heading was found. Make sure your degrees are easy to spot.']);
+    if (p.yearsAuto === null) out.push(['tip', 'No date ranges (e.g. "Jun 2019 – Present") were found, so years of experience couldn\'t be counted. Enter them above.']);
+    return out;
+  }
+
+  // ---------- scoring a role against the resume ----------
+  let matchCache = new Map();
+  function scoreJob(j) {
+    const q = QI && QI.jobs[j.key];
+    const has = (i) => CV.skills.has(i);
+    const req = q ? idList(q[0]) : [], pref = q ? idList(q[1]) : [];
+    const known = !!q && (req.length + pref.length) > 0;
+    const skillP = known ? (req.filter(has).length + 0.5 * pref.filter(has).length + 0.5) / (req.length + 0.5 * pref.length + 1) : null;
+    const catP = CV.aff[j.category] || 0;
+    const yrs = q ? q[4] : -1, py = CV.years;
+    let expP = 0.75;
+    if (j.intern) expP = py == null ? 0.9 : py > 6 ? 0.5 : 1;
+    else if (py != null && yrs >= 0) expP = py >= yrs ? (py - yrs > 12 ? 0.75 : 1) : Math.max(0, 1 - (yrs - py) / Math.max(4, yrs));
+    const ed = q ? q[3] : '';
+    const eduP = ed === 'grad' ? (CV.edu >= 3 ? 1 : 0.5) : ed === 'bachelor' ? (CV.edu >= 2 ? 1 : 0.4) : 1;
+    const L = q && q[2] ? parseInt(q[2], 10) : 0, poly = !!(q && /p/.test(q[2] || ''));
+    const clrP = !L ? 1 : CV.clr >= L ? (poly && !CV.poly ? 0.75 : 1) : CV.clr ? 0.55 : 0.3;
+    // skills carry the most weight; a role whose qualifications haven't been read gets a below-average
+    // skills score, so it can't rank as a strong match
+    let s = 0.60 * (known ? skillP : 0.3) + 0.20 * catP + 0.10 * expP + 0.06 * clrP + 0.04 * eduP;
+    // once the role's qualification lines are loaded, how many of them the resume shows counts for more than half
+    const bs = bulletScore(j.key);
+    if (bs !== null) s = 0.45 * s + 0.55 * bs;
+    return { score: Math.max(1, Math.min(99, Math.round(s * 100))), known: known || bs !== null };
+  }
+  // share of a role's qualification lines the resume shows (met = 1, partly = 0.5); preferred lines count less
+  let bulletMemo = new Map();
+  function bulletScore(key) {
+    if (bulletMemo.has(key)) return bulletMemo.get(key);
+    const qb = QUALS[key]; if (!qb) return null;
+    const part = (list) => { let n = 0, s = 0; for (const b of list || []) { const x = judge(b); if (x.st === 'na') continue; n++; s += x.st === 'met' ? 1 : x.st === 'part' ? 0.5 : 0; } return n ? s / n : null; };
+    const r = part(qb[0]), p = part(qb[1]);
+    const v = r !== null ? (p !== null ? 0.8 * r + 0.2 * p : r) : p;
+    bulletMemo.set(key, v);
+    return v;
+  }
+  function matchOf(j) {
+    if (!CV || !QI || !j.key) return null;
+    let m = matchCache.get(j.key);
+    if (!m) { m = scoreJob(j); matchCache.set(j.key, m); }
+    return m;
+  }
+  const resetScores = () => { matchCache = new Map(); bulletMemo = new Map(); };
+  // load every company's qualification lines in the background (only once someone adds a resume)
+  let deepRun = 0, deepProgress = 1, renderTimer = null;
+  const scheduleRender = () => { clearTimeout(renderTimer); renderTimer = setTimeout(() => { if (CV) render(); }, 250); };
+  async function deepScore() {
+    const run = ++deepRun;
+    if (!CV || !QI) return;
+    const cos = [...new Set(D.jobs.filter((j) => j.active && QI.jobs[j.key] && QI.jobs[j.key][5] && !QUALS[j.key]).map((j) => j.company))];
+    if (!cos.length) { deepProgress = 1; return; }
+    deepProgress = 0; renderResumeBar();
+    for (let i = 0; i < cos.length; i++) {
+      if (run !== deepRun || !CV) return;
+      try { await loadScript('data/quals/' + slugOf(cos[i]) + '.js'); } catch (e) {}
+      deepProgress = (i + 1) / cos.length;
+      if ((i + 1) % 10 === 0) { resetScores(); scheduleRender(); }
+    }
+    deepProgress = 1; resetScores(); scheduleRender();
+  }
+  const STRONG = 60, GOOD = 45;   // match tiers
+  const tierOf = (s) => (s >= STRONG ? 'hi' : s >= GOOD ? 'mid' : 'lo');
+  function matchPill(j) {
+    const m = matchOf(j); if (!m) return '';
+    const t = m.known ? 'Your resume vs. this role\'s posted qualifications. Click to see what matches and what\'s missing.' : 'Based on role type, experience and clearance only (this posting\'s qualifications haven\'t been read yet). Click for details.';
+    return `<button type="button" class="match-pill m-${tierOf(m.score)}" data-cmp="${esc(j.key)}" title="${t}">Match ${m.known ? '' : '~'}${m.score}%</button>`;
+  }
+  const DOC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>';
+
+  // ---------- saving (this browser only) ----------
+  function saveResume(remember) {
+    if (!CV) return;
+    const rec = JSON.stringify({ name: CV.name, text: CV.text, edits: CV.edits, at: Date.now() });
+    try { sessionStorage.setItem(RS_KEY, rec); } catch (e) {}
+    try { if (remember) localStorage.setItem(RS_KEY, rec); else localStorage.removeItem(RS_KEY); } catch (e) {}
+  }
+  const remembered = () => { try { return !!localStorage.getItem(RS_KEY); } catch (e) { return false; } };
+  function forgetResume() {
+    CV = null; resetScores(); deepRun++;
+    try { sessionStorage.removeItem(RS_KEY); localStorage.removeItem(RS_KEY); } catch (e) {}
+    if (state.sort === 'match') { state.sort = 'date'; state.dir = -1; }
+    renderResumeBar(); render();
+  }
+  function setResume(text, name, edits, remember) {
+    CV = buildProfile(text, name, edits);
+    resetScores();
+    saveResume(remember);
+    renderResumeBar(); render();
+    deepScore();
+  }
+
+  function renderResumeBar() {
+    $('rs-open').classList.toggle('on', !!CV);
+    $('rs-open-label').textContent = CV ? 'My resume' : 'Match my resume';
+    const bar = $('rs-bar');
+    if (!CV) { bar.hidden = true; return; }
+    const act = D.jobs.filter((j) => j.active && inFit(j) && inGroup(j));
+    const strong = act.filter((j) => { const m = matchOf(j); return m && m.score >= STRONG; }).length;
+    const prog = deepProgress < 1 ? ` · <span title="Reading each role's qualification list, in this browser">checking qualifications ${Math.round(deepProgress * 100)}%…</span>` : '';
+    bar.innerHTML = `${DOC_ICON.replace('<svg', '<svg width="16" height="16"')}<span>Matching to <b>${esc(CV.name)}</b> · <b>${strong.toLocaleString()}</b> strong match${strong === 1 ? '' : 'es'} (${STRONG}%+)${prog}</span><span class="sp"></span>` +
+      `<button type="button" data-act="best" class="${state.sort === 'match' ? 'on' : ''}">${state.sort === 'match' ? 'Sorted by best match' : 'Show best matches first'}</button>` +
+      `<button type="button" data-act="edit">Review &amp; edit</button><button type="button" data-act="remove">Remove</button>`;
+    bar.hidden = false;
+  }
+  $('rs-bar').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-act]'); if (!b) return;
+    if (b.dataset.act === 'best') showBest();
+    else if (b.dataset.act === 'edit') openResume();
+    else if (b.dataset.act === 'remove') { forgetResume(); toast('Your resume was removed from this browser.'); }
+  });
+  function showBest() {
+    state.sort = 'match'; state.dir = -1;
+    render(); renderResumeBar();
+    document.querySelector('.tablewrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ---------- the "Match my resume" window ----------
+  let pendingCompare = null;
+  function openResume(view) {
+    const dlg = $('rs-dlg');
+    ensureIndex().catch(() => {});
+    if (CV && view !== 'upload') renderProfileView(); else renderUploadView();
+    if (!dlg.open) dlg.showModal();
+  }
+  function renderUploadView() {
+    $('rs-title').textContent = 'Match my resume';
+    $('rs-body').innerHTML = `
+      <p class="privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span><b>Your resume stays on this device.</b> This page reads it right here in your browser. It is never uploaded, emailed or saved on any server, and the tracker's owner can't see it.</span></p>
+      <label class="drop" id="rs-drop">
+        <input type="file" id="rs-file" accept=".pdf,.docx,.txt,.md,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        <b>Drop your resume here</b><span>or <u>choose a file</u></span><small>PDF, Word (.docx) or text</small>
+      </label>
+      <details class="paste"><summary>Or paste the text instead</summary>
+        <textarea id="rs-paste" rows="8" placeholder="Paste your resume text here"></textarea>
+        <button type="button" class="btn" id="rs-paste-go">Use this text</button>
+      </details>
+      <label class="remember"><input type="checkbox" id="rs-remember"${remembered() ? ' checked' : ''}> Remember my resume in this browser for next time</label>
+      <p class="rs-status" id="rs-status" role="status"></p>
+      <p class="fine">How it works: the tracker compares the skills, degrees, years of experience and clearance on your resume with each role's posted qualifications, using fixed rules (no AI). Use it as a starting point, not a verdict.</p>`;
+  }
+  function renderProfileView() {
+    const p = CV;
+    $('rs-title').textContent = 'Your resume';
+    const areas = Object.entries(p.aff).filter(([, v]) => v >= 0.35).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k]) => k);
+    const sk = [...p.skills].sort((a, b) => SK[a].n.localeCompare(SK[b].n));
+    $('rs-body').innerHTML = `
+      <div class="rs-file">${DOC_ICON.replace('<svg', '<svg width="18" height="18"')}<b>${esc(p.name)}</b><span>· ${p.words.toLocaleString()} words · read in this browser only</span><span class="sp"></span><button type="button" class="lnk" data-act="replace">Use a different resume</button></div>
+      <div class="rs-grid">
+        <div class="rs-card"><div class="k">Experience</div><div class="v"><input type="number" id="rs-years" min="0" max="50" step="0.5" value="${p.years ?? ''}" placeholder="?"> yrs</div><small>${p.yearsAuto != null ? 'Counted from the dates on your resume (not school). Change it if it\'s off.' : 'No dates found. Enter your years of work experience.'}</small></div>
+        <div class="rs-card"><div class="k">Education</div><div class="v">${p.mba ? 'MBA' : EDU_NAME[p.edu]}</div><small>Highest degree found</small></div>
+        <div class="rs-card"><div class="k">Clearance</div><div class="v"><select id="rs-clr">${CLR_NAME.map((n, i) => `<option value="${i}"${p.clr === i ? ' selected' : ''}>${i ? n : 'None listed'}</option>`).join('')}</select><label><input type="checkbox" id="rs-poly"${p.poly ? ' checked' : ''}>Poly</label></div><small>${p.clrAuto ? 'Found on your resume' : 'Set it if you hold one'}</small></div>
+        <div class="rs-card"><div class="k">Strongest areas</div><div class="v small">${areas.length ? areas.map(esc).join('<br>') : 'Not clear yet. Add skills below.'}</div></div>
+      </div>
+      <h4>Skills we found <span>(${sk.length}) · remove any that aren't right, or add ones we missed</span></h4>
+      <div class="chips" id="rs-skills">${sk.map((i) => `<span class="sk${p.auto.has(i) ? '' : ' added'}">${esc(SK[i].n)}<button type="button" data-rm="${i}" aria-label="Remove ${esc(SK[i].n)}" title="Remove">✕</button></span>`).join('') || '<span class="fine">None found yet.</span>'}</div>
+      <form class="rs-add" id="rs-add-form"><input id="rs-skill-add" list="rs-skill-list" placeholder="Add a skill, e.g. Capture management" autocomplete="off"><datalist id="rs-skill-list">${SK.map((s) => `<option value="${esc(s.n)}">`).join('')}</datalist><button type="submit" class="btn">Add</button></form>
+      <h4>Resume check</h4>
+      <ul class="rs-review">${p.review.map(([k, t]) => `<li class="rv-${k}"><span class="ic">${k === 'good' ? '✓' : '!'}</span><span>${esc(t)}</span></li>`).join('')}</ul>
+      <div class="dlg-actions">
+        <button type="button" class="btn primary" data-act="best">Show my best matches</button>
+        <label class="remember" style="margin:0 0 0 4px"><input type="checkbox" id="rs-remember"${remembered() ? ' checked' : ''}> Remember in this browser</label>
+        <span class="sp" style="flex:1"></span>
+        <button type="button" class="btn" data-act="remove">Remove my resume</button>
+      </div>
+      <p class="fine">Matches compare these details with each role's posted qualifications using fixed rules (no AI). Nothing here leaves your browser.</p>`;
+  }
+  function updateEdits(change) {
+    const ed = Object.assign({}, CV.edits, change);
+    const rem = $('rs-remember') ? $('rs-remember').checked : remembered();
+    setResume(CV.text, CV.name, ed, rem);
+    renderProfileView();
+  }
+  async function takeText(text, name) {
+    const st = $('rs-status');
+    if (!text || text.replace(/\s+/g, ' ').trim().length < 150) throw new Error('Not much text could be read from that. If it\'s a scanned image, paste your resume text instead.');
+    st.className = 'rs-status'; st.textContent = 'Matching against every role…';
+    await ensureIndex();
+    setResume(text, name, {}, $('rs-remember') && $('rs-remember').checked);
+    if (pendingCompare) { const k = pendingCompare; pendingCompare = null; $('rs-dlg').close(); openCompare(k); }
+    else renderProfileView();
+  }
+  async function takeFile(file) {
+    const st = $('rs-status');
+    st.className = 'rs-status'; st.textContent = `Reading ${file.name}…`;
+    try { await takeText(await readResumeFile(file), file.name); }
+    catch (err) { st.className = 'rs-status err'; st.textContent = err.message || 'That file couldn\'t be read.'; }
+  }
+  const rsBody = $('rs-body');
+  rsBody.addEventListener('change', (e) => {
+    if (e.target.id === 'rs-file' && e.target.files[0]) takeFile(e.target.files[0]);
+    else if (e.target.id === 'rs-years') updateEdits({ years: e.target.value === '' ? null : Math.max(0, Number(e.target.value)) });
+    else if (e.target.id === 'rs-clr') updateEdits({ clr: Number(e.target.value) });
+    else if (e.target.id === 'rs-poly') updateEdits({ poly: e.target.checked });
+    else if (e.target.id === 'rs-remember' && CV) { saveResume(e.target.checked); toast(e.target.checked ? 'Your resume will be remembered in this browser.' : 'Your resume will be forgotten when you close this tab.'); }
+  });
+  rsBody.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.id === 'rs-paste-go') { takeText($('rs-paste').value, 'Pasted resume').catch((err) => { const st = $('rs-status'); st.className = 'rs-status err'; st.textContent = err.message; }); }
+    else if (b.dataset.rm !== undefined) {
+      const i = Number(b.dataset.rm);
+      const added = (CV.edits.added || []).filter((x) => x !== i), removed = CV.auto.has(i) ? [...new Set([...(CV.edits.removed || []), i])] : (CV.edits.removed || []);
+      updateEdits({ added, removed });
+    }
+    else if (b.dataset.act === 'replace') renderUploadView();
+    else if (b.dataset.act === 'best') { $('rs-dlg').close(); showBest(); }
+    else if (b.dataset.act === 'remove') { $('rs-dlg').close(); forgetResume(); toast('Your resume was removed from this browser.'); }
+  });
+  rsBody.addEventListener('submit', (e) => {
+    if (e.target.id !== 'rs-add-form') return;
+    e.preventDefault();
+    const v = $('rs-skill-add').value.trim().toLowerCase(); if (!v) return;
+    const i = SK.findIndex((s) => s.n.toLowerCase() === v) >= 0 ? SK.findIndex((s) => s.n.toLowerCase() === v) : SK.findIndex((s) => s.n.toLowerCase().includes(v));
+    if (i < 0) { toast('Pick a skill from the list. These are the skills postings are checked for.'); return; }
+    updateEdits({ added: [...new Set([...(CV.edits.added || []), i])], removed: (CV.edits.removed || []).filter((x) => x !== i) });
+  });
+  rsBody.addEventListener('dragover', (e) => { const d = e.target.closest('#rs-drop'); if (d) { e.preventDefault(); d.classList.add('over'); } });
+  rsBody.addEventListener('dragleave', (e) => { const d = e.target.closest('#rs-drop'); if (d) d.classList.remove('over'); });
+  rsBody.addEventListener('drop', (e) => { const d = e.target.closest('#rs-drop'); if (!d) return; e.preventDefault(); d.classList.remove('over'); if (e.dataTransfer.files[0]) takeFile(e.dataTransfer.files[0]); });
+  $('rs-open').addEventListener('click', () => openResume());
+  document.querySelectorAll('dialog.dlg').forEach((dl) => {
+    dl.addEventListener('click', (e) => { if (e.target.closest('[data-close]') || e.target === dl) dl.close(); });
+    dl.addEventListener('close', () => { if (dl.id === 'rs-dlg') pendingCompare = null; });
+  });
+
+  // ---------- comparing the resume with one role ----------
+  const NUMW = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, fifteen: 15, twenty: 20 };
+  const YRS_RX = /(\d{1,2})\)?\s*\+?\s*(?:-|–|to)?\s*(?:\d{1,2}\s*)?\+?\s*(?:or more\s+|plus\s+)?(?:years|yrs)\b/i;
+  const normNums = (s) => s.replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty)\b(?=\s*(\(\d+\))?\s*\+?\s*(years|yrs))/gi, (w) => NUMW[w.toLowerCase()]);
+  const needYrs = (s) => { const m = normNums(s).replace(/\d{1,2}\s*years? (of age|old)/gi, '').match(YRS_RX); return m ? Number(m[1]) : null; };
+  function needDeg(s) {
+    if (/in lieu of|instead of a degree|without a degree|no degree/i.test(s)) return 0;
+    if (/bachelor|\bB\.?[AS]\.?\b|BA\/BS|BS\/BA|undergraduate|4[- ]year degree|four[- ]year degree|college degree|university degree/i.test(s)) return 2;
+    if (/\bMBA\b|master|graduate degree|advanced degree|ph\.?d|doctora|\bJ\.?D\.?\b|juris doctor/i.test(s)) return 3;
+    if (/high school|\bGED\b|associate'?s? degree|\bAA\b degree|2[- ]year degree/i.test(s)) return 1;
+    if (/\bdegree\b/i.test(s)) return 2;
+    return 0;
+  }
+  const DEG_WORD = ['', 'a high-school or associate degree', 'a bachelor\'s degree', 'a master\'s degree (or MBA/JD)'];
+  function judge(b) {
+    const r = { st: 'na', hints: [], missSk: [], missKw: [], gap: null };
+    let hardOk = null, hardPart = false;
+    // degree + years, with "or" alternatives ("Bachelor's + 8 yrs; or Master's + 6 yrs; or 12 yrs in lieu of a degree")
+    if (needDeg(b) || needYrs(b) !== null) {
+      const segs = b.split(/;|\bor\b(?=\s+(?:an?\s+)?(?:bachelor|master|graduate|advanced|ph\.?d|doctora|associate|high school|in lieu|equivalent|\d|one|two|three|four|five|six|seven|eight|nine|ten))/i)
+        .filter((s) => needDeg(s) || needYrs(s) !== null);
+      let best = null;
+      for (const s of segs) {
+        const d = needDeg(s), y = needYrs(s);
+        const degOk = !d || CV.edu >= d, gap = y === null || CV.years == null ? 0 : Math.max(0, y - CV.years);
+        const c = { d, y, degOk, gap, ok: degOk && gap === 0 };
+        if (!best || (c.ok && !best.ok) || (!best.ok && !c.ok && (c.degOk && !best.degOk || (c.degOk === best.degOk && c.gap < best.gap)))) best = c;
+      }
+      if (best) {
+        if (best.ok) hardOk = true;
+        else if (!best.degOk) { hardOk = false; r.gap = `Asks for ${DEG_WORD[best.d]}${best.y ? ` and ${best.y}+ years` : ''}`; r.hints.push(`Your resume doesn't show ${DEG_WORD[best.d]}.`); }
+        else if (best.gap <= 2) { hardPart = true; r.hints.push(`Asks for ${best.y}+ years; your resume shows about ${CV.years}.`); r.gap = `Asks for ${best.y}+ years of experience (you show about ${CV.years})`; }
+        else { hardOk = false; r.hints.push(`Asks for ${best.y}+ years; your resume shows about ${CV.years}.`); r.gap = `Asks for ${best.y}+ years of experience (you show about ${CV.years})`; }
+        if (best.y !== null && CV.years == null) r.hints.push('Enter your years of experience under "My resume" to check this.');
+      }
+    }
+    // clearance
+    const c = clearanceOf(b);
+    if (c.lvl) {
+      const obtain = /ability to obtain|able to obtain|eligib|willing(ness)? to|obtain and maintain|must be able to/i.test(b) && !/\b(active|current)\b/i.test(b);
+      if (CV.clr >= c.lvl && (!c.poly || CV.poly)) { if (hardOk !== false) hardOk = true; }
+      else if (obtain) { hardPart = true; r.hints.push(`You'd need to be able to get a ${CLR_NAME[c.lvl]} clearance (U.S. citizenship is usually required).`); }
+      else { hardOk = false; r.gap = r.gap || `Asks for an active ${CLR_NAME[c.lvl]}${c.poly ? ' with polygraph' : ''} clearance`; r.hints.push(`Asks for ${CLR_NAME[c.lvl]}${c.poly ? ' with polygraph' : ''}; ${CV.clr ? 'your resume lists ' + CLR_NAME[CV.clr] : 'no clearance is listed on your resume'}.`); }
+    }
+    // skills and the posting's own words
+    const sk = skillsOfB(b), have = sk.filter((i) => CV.skills.has(i));
+    r.missSk = sk.filter((i) => !CV.skills.has(i));
+    const kt = termsOfB(b), kh = kt.filter(([, s]) => CV.stems.has(s));
+    r.missKw = kt.filter(([, s]) => !CV.stems.has(s)).map(([w]) => w);
+    // share of the requirement found on the resume: each named skill counts like three ordinary words
+    let soft = null;
+    if (sk.length || kt.length >= 2) soft = (3 * have.length + kh.length) / (3 * sk.length + kt.length);
+    if (/\bU\.?S\.? citizen|citizenship/i.test(b) && soft === null && hardOk === null && !hardPart) { r.st = 'na'; r.hints.push('Can\'t be checked from a resume.'); return r; }
+    if (hardOk === false) r.st = soft !== null && soft >= 0.6 ? 'part' : 'miss';
+    else if (hardPart) r.st = 'part';
+    else if (hardOk === true) r.st = soft === null || soft >= 0.4 ? 'met' : 'part';
+    else if (soft !== null) r.st = soft >= 0.55 ? 'met' : soft >= 0.25 ? 'part' : 'miss';
+    if (r.st !== 'met') {
+      if (r.missSk.length) r.hints.push('Not on your resume: ' + r.missSk.map((i) => SK[i].n).join(', ') + '.');
+      else if (r.missKw.length && r.st !== 'na') r.hints.push('Words from the posting not on your resume: ' + r.missKw.slice(0, 5).join(', ') + '.');
+    }
+    return r;
+  }
+
+  async function openCompare(key) {
+    const j = D.jobs.find((x) => x.key === key); if (!j) return;
+    if (!CV) { pendingCompare = key; openResume('upload'); return; }
+    const dlg = $('cmp-dlg'), body = $('cmp-body');
+    $('cmp-title').textContent = 'Your resume vs. this role';
+    body.innerHTML = '<p class="fine">Loading this role\'s qualifications…</p>';
+    if (!dlg.open) dlg.showModal();
+    try { await ensureIndex(); } catch (e) { body.innerHTML = `<p class="rs-status err">${esc(e.message)}</p>`; return; }
+    const q = QI.jobs[key];
+    if (q && q[5] && !QUALS[key]) { try { await loadScript('data/quals/' + slugOf(j.company) + '.js'); } catch (e) {} }
+    if (QUALS[key] && !bulletMemo.has(key)) { matchCache.delete(key); scheduleRender(); }   // score now includes the lines
+    const m = matchOf(j);
+    const [reqB, prefB] = QUALS[key] || [[], []];
+    const judged = (list) => list.map((b) => [b, judge(b)]);
+    const R = judged(reqB), P = judged(prefB);
+    const counted = R.filter(([, x]) => x.st !== 'na');
+    const metN = counted.filter(([, x]) => x.st === 'met').length, partN = counted.filter(([, x]) => x.st === 'part').length;
+    const icon = { met: '✓', part: '◐', miss: '✕', na: '?' }, label = { met: 'On your resume', part: 'Partly', miss: 'Not found', na: 'Can\'t check' };
+    const li = ([b, x]) => `<li class="st-${x.st}"><span class="ic" title="${label[x.st]}">${icon[x.st]}</span><div>${esc(b)}${x.hints.length ? `<small>${esc(x.hints.join(' '))}</small>` : ''}</div></li>`;
+    // what's missing, overall
+    const gaps = [...new Set([...R, ...P].filter(([, x]) => x.gap && x.st !== 'met').map(([, x]) => x.gap))];
+    const reqSk = new Set(q ? idList(q[0]) : []), prefSk = new Set(q ? idList(q[1]) : []);
+    for (const [, x] of R) x.missSk.forEach((i) => reqSk.add(i));
+    for (const [, x] of P) x.missSk.forEach((i) => { if (!reqSk.has(i)) prefSk.add(i); });
+    const missReq = [...reqSk].filter((i) => !CV.skills.has(i)), missPref = [...prefSk].filter((i) => !CV.skills.has(i) && !reqSk.has(i));
+    const kw = [...new Set(R.filter(([, x]) => x.st === 'miss' || x.st === 'part').flatMap(([, x]) => x.missKw))].slice(0, 14);
+    if (q && q[2] && !gaps.some((g) => /clearance/.test(g))) {
+      const L = parseInt(q[2], 10), poly = /p/.test(q[2]);
+      if (CV.clr < L || (poly && !CV.poly)) gaps.push(`The posting mentions a ${CLR_NAME[L]}${poly ? ' with polygraph' : ''} clearance${CV.clr ? ` (you list ${CLR_NAME[CV.clr]})` : ' (none listed on your resume)'}`);
+    }
+    const anyMissing = gaps.length || missReq.length || missPref.length || kw.length;
+    const head = reqB.length || prefB.length
+      ? (counted.length ? `Your resume shows <b>${metN}</b> of <b>${counted.length}</b> required qualifications${partN ? `, and partly shows ${partN} more` : ''}.` : 'This posting lists preferred qualifications only.')
+      : 'This posting\'s qualification list couldn\'t be read' + (q ? ', so this compares the skills, degree, experience and clearance it mentions.' : ' yet. It\'s usually ready after the next daily update.');
+    body.innerHTML = `
+      <div class="cmp-job"><a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)} ↗</a><div>${esc(j.company)} · ${esc(j.location || '')}</div></div>
+      <div class="cmp-sum"><div class="ring m-${tierOf(m.score)}">${m.score}%</div><div>${head}<br><span class="fine" style="margin:0">Overall match combines skills, your strongest areas, years of experience, clearance and degree.</span></div></div>
+      ${R.length ? `<h4>Required qualifications</h4><ul class="cmp-list">${R.map(li).join('')}</ul>` : ''}
+      ${P.length ? `<h4>Preferred qualifications</h4><ul class="cmp-list">${P.map(li).join('')}</ul>` : ''}
+      <div class="cmp-missing">
+        <h4>What's missing from your resume</h4>
+        ${anyMissing ? `
+          ${gaps.length ? `<ul>${gaps.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>` : ''}
+          ${missReq.length || missPref.length ? `<div class="chips">${missReq.map((i) => `<span class="gap" title="Required">${esc(SK[i].n)}</span>`).join('')}${missPref.map((i) => `<span class="gap pref" title="Preferred">${esc(SK[i].n)} (preferred)</span>`).join('')}</div>` : ''}
+          ${kw.length ? `<p><b>Words from the requirements that don't appear on your resume:</b> ${kw.map(esc).join(', ')}</p>` : ''}
+          <p>If you do have this experience, say so in the posting's own words. Recruiters and screening software look for them.</p>`
+        : '<p>Nothing obvious. Your resume covers what this posting asks for.</p>'}
+      </div>
+      <p class="fine">A keyword-and-rules check, not a judgment of your fit. It can miss experience you describe in different words. <button type="button" class="lnk" data-act="edit-resume">Edit what the tracker read from your resume</button></p>`;
+  }
+  $('cmp-body').addEventListener('click', (e) => { if (e.target.closest('[data-act="edit-resume"]')) { $('cmp-dlg').close(); openResume(); } });
+  $('rows').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cmp]'); if (!b) return;
+    e.stopPropagation();
+    openCompare(b.dataset.cmp);
+  });
+
+  // bring back a resume saved in this browser (this tab, or "remember" from an earlier visit)
+  (function restoreResume() {
+    let rec = null;
+    try { rec = JSON.parse(sessionStorage.getItem(RS_KEY) || localStorage.getItem(RS_KEY) || 'null'); } catch (e) {}
+    if (!rec || !rec.text) return;
+    ensureIndex().then(() => { CV = buildProfile(rec.text, rec.name || 'My resume', rec.edits || {}); resetScores(); renderResumeBar(); render(); deepScore(); }).catch(() => {});
+  })();
+
+  render();
+})();
+</script>
+</body>
+</html>

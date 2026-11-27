@@ -1,0 +1,1 @@
+window.RUN_STATUS = {"at":"2026-11-27T12:43:25","minutes":19.4,"limit":25,"status":"ok","detail":"Catch-up run after the computer slept through 8 AM"};
